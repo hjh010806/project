@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>로그인</title>
+    <link rel="stylesheet" href="/login/login.css">
+</head>
+<body>
+<div class="centered-content">
+
+    <div class="section">
+        <div class="container">
+            <div class="row full-height justify-content-center">
+                <div class="col-12 text-center align-self-center py-5">
+                    <div class="section pb-5 pt-5 pt-sm-2 text-center">
+                        <h6 class="mb-0 pb-3"><span>Log In </span><span>Sign Up</span></h6>
+                        <input class="checkbox" type="checkbox" id="reg-log" name="reg-log"/>
+                        <label for="reg-log"></label>
+                        <div class="card-3d-wrap mx-auto">
+                            <div class="card-3d-wrapper">
+                                <div class="card-front">
+                                    <div class="center-wrap">
+                                        <form th:action="@{/user/login}" th:object="${userLoginForm}" method="post">
+                                            <div class="section text-center">
+                                                <h4 class="mb-4 pb-3">Log In</h4>
+                                                <div class="form-group">
+                                                    <input type="email" th:field="*{email}" class="form-style"
+                                                           placeholder="가입 이메일" id="signinEamil" autocomplete="off" >
+                                                    <i class="input-icon uil uil-at"></i>
+                                                </div>
+                                                <div class="form-group mt-2">
+                                                    <input type="password" th:field="*{password1}" class="form-style"
+                                                           placeholder="비밀번호" id="signinPassword"
+                                                           autocomplete="off">
+                                                    <i class="input-icon uil uil-lock-alt"></i>
+                                                </div>
+                                                <button type="submit" class="btn mt-4">login</button>
+                                                <p class="mb-0 mt-4 text-center"><a class="link">Forgot your
+                                                    password?</a>
+                                                </p>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="card-back">
+                                    <div class="center-wrap">
+                                        <form th:action="@{/user/signup}" th:object="${userCreateForm}" method="post">
+                                            <div class="section text-center">
+                                                <h4 class="mb-4 pb-3">Sign Up</h4>
+                                                <div class="form-group">
+                                                    <input type="text" th:field="*{name}" class="form-style"
+                                                           placeholder="이름 ex) 홍길동" id="signupName" autocomplete="off">
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-style" th:field="*{nickName}"
+                                                           placeholder="닉네임" id="signupNickname" autocomplete="off">
+                                                </div>
+                                                <div class="form-group mt-2">
+                                                    <input type="email" class="form-style" th:field="*{email}"
+                                                           placeholder="가입 이메일" id="signupEamil" autocomplete="off">
+                                                </div>
+                                                <div class="form-group mt-2">
+                                                    <input type="password" class="form-style"
+                                                           placeholder="비밀번호" id="password1" th:field="*{password1}"
+                                                           autocomplete="off">
+                                                </div>
+                                                <div class="form-group mt-2">
+                                                    <input type="password" class="form-style"
+                                                           placeholder="비밀번호 재입력" id="password2" th:field="*{password2}"
+                                                           autocomplete="off">
+                                                </div>
+                                                <div class="form-group mt-2">
+                                                    <input type="text" class="form-style" th:field="*{number}"
+                                                           placeholder="휴대폰 번호" id="signupNumber">
+                                                </div>
+                                                <button type="submit" class="btn mt-4">Submit</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

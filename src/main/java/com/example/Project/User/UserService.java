@@ -12,15 +12,17 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     public SiteUser create(String name, String email, String password, String nickName, String number){
-        SiteUser user = new SiteUser();
-        user.setName(name);
-        user.setEmail(email);
-        user.setNickName(nickName);
-        user.setNumber(number);
-        user.setPassword(passwordEncoder.encode(password));
-        user.setRole(nickName.equalsIgnoreCase("admin") ? UserRole.ADMIN.name() : UserRole.USER.name());
-        userRepository.save(user);
-        return user;
+        SiteUser user = SiteUser.builder()
+                .name(name)
+                .email(email)
+                .nickName(nickName)
+                .number(number)
+                .password(passwordEncoder.encode(password))
+                .role(nickName.equalsIgnoreCase("admin") ? UserRole.ADMIN.name() : UserRole.USER.name())
+                .build();
+
+        return userRepository.save(user);
     }
+
 
 }

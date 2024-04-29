@@ -17,7 +17,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/signup")
-    public String signup(UserCreateForm userCreateForm,UserLoginForm userLoginForm) {
+    public String signup(UserCreateForm userCreateForm) {
         return "login/login_form";
     }
 
@@ -32,8 +32,8 @@ public class UserController {
         }
 
         try {
-            userService.create(userCreateForm.getName(), userCreateForm.getNickName(),userCreateForm.getNumber(),
-                               userCreateForm.getEmail(), userCreateForm.getPassword1());
+            userService.create(userCreateForm.getName(), userCreateForm.getEmail(), userCreateForm.getPassword1(),
+                    userCreateForm.getNickName(),  userCreateForm.getNumber());
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
             bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
@@ -44,11 +44,11 @@ public class UserController {
             return "login/login_form";
         }
 
-        return "redirect:/test";
+        return "redirect:/";
     }
 
     @GetMapping("/login")
-    public String login(UserCreateForm userCreateForm,UserLoginForm userLoginForm) {
+    public String login(UserCreateForm userCreateForm) {
 
         return "login/login_form";
     }

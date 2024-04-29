@@ -20,12 +20,10 @@ public class PrincipalDetail implements UserDetails, OAuth2User{
         this.siteUser = siteUser;
     }
 
-    // OAuth2User 로그인
     public PrincipalDetail(SiteUser siteUser,  Map<String, Object> attributes) {
         this.siteUser = siteUser;
         this.attributes = attributes;
     }
-    //OAuth2User의 메서드
     @Override
     public Map<String, Object> getAttributes(){
         return attributes;
@@ -45,12 +43,12 @@ public class PrincipalDetail implements UserDetails, OAuth2User{
 
     @Override
     public String getPassword() {
-        return siteUser.getPassword();
+        return getPassword();
     }
 
     @Override
     public String getUsername() {
-        return siteUser.getEmail();
+        return getUsername();
     }
 
     @Override
@@ -75,18 +73,9 @@ public class PrincipalDetail implements UserDetails, OAuth2User{
 
     @Override
     public String getName() {
-        return siteUser.getEmail();
+        return getName();
     }
     public String getEmail(){
         return siteUser.getEmail();
     }
-    public String getNickname(){
-        return siteUser.getNickName();
-    }
-    public SiteUser getUser(){
-        return siteUser;
-    }
-//    public String getUrl(){
-//        return siteUser.getUrl();
-//    }
 }

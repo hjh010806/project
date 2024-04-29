@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <title>로그인</title>
@@ -5,6 +6,7 @@
 </head>
 <body>
 <div class="centered-content">
+
     <div class="section">
         <div class="container">
             <div class="row full-height justify-content-center">
@@ -17,27 +19,21 @@
                             <div class="card-3d-wrapper">
                                 <div class="card-front">
                                     <div class="center-wrap">
-                                        <form th:action="@{/user/login}"  method="post">
+                                        <form th:action="@{/user/login}" th:object="${userLoginForm}" method="post">
                                             <div class="section text-center">
                                                 <h4 class="mb-4 pb-3">Log In</h4>
                                                 <div class="form-group">
-                                                    <input type="email" name="username" class="form-style"
-                                                           placeholder="가입 이메일" id="signinEmail" autocomplete="off" >
+                                                    <input type="email" th:field="*{email}" class="form-style"
+                                                           placeholder="가입 이메일" id="signinEamil" autocomplete="off" >
+                                                    <i class="input-icon uil uil-at"></i>
                                                 </div>
                                                 <div class="form-group mt-2">
-                                                    <input type="password" name="password" class="form-style"
+                                                    <input type="password" th:field="*{password1}" class="form-style"
                                                            placeholder="비밀번호" id="signinPassword"
                                                            autocomplete="off">
+                                                    <i class="input-icon uil uil-lock-alt"></i>
                                                 </div>
-                                                <div th:if="${param.error}" class="alert alert-danger">
-                                                    사용자ID 또는 비밀번호를 확인해 주세요.
-                                                </div>
-                                                <div class="form-group-login">
-                                                    <button type="submit" class="btn mt-4">login</button>
-                                                    <a href="/oauth2/authorization/google" class="Google">
-                                                        <img src="/login/google.png" alt="Google Icon" class="google-icon">
-                                                    </a>
-                                                </div>
+                                                <button type="submit" class="btn mt-4">login</button>
                                                 <p class="mb-0 mt-4 text-center"><a class="link">Forgot your
                                                     password?</a>
                                                 </p>
@@ -60,7 +56,7 @@
                                                 </div>
                                                 <div class="form-group mt-2">
                                                     <input type="email" class="form-style" th:field="*{email}"
-                                                           placeholder="가입 이메일" id="signupEmail" autocomplete="off">
+                                                           placeholder="가입 이메일" id="signupEamil" autocomplete="off">
                                                 </div>
                                                 <div class="form-group mt-2">
                                                     <input type="password" class="form-style"

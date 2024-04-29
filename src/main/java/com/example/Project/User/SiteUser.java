@@ -1,17 +1,12 @@
 package com.example.Project.User;
 
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor
 public class SiteUser {
     // 회원 id
     @Id
@@ -32,20 +27,5 @@ public class SiteUser {
     private String email;
     // 유저 권한
     private String role;
-
-    private String provider;
-    private String providerId;
-
-    @Builder
-    public SiteUser(String name, String password,String nickName ,String email, String role, String provider, String providerId, String number) {
-        this.name = name;
-        this.password = password;
-        this.nickName = nickName;
-        this.email = email;
-        this.role = role;
-        this.provider = provider;
-        this.providerId = providerId;
-        this.number=number;
-    }
 
 }

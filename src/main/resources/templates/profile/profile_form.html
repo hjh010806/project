@@ -1,9 +1,48 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>내 정보</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css" rel="stylesheet" type="text/css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-
+<div>
+    <nav th:replace="~{./navbar/navbar :: navbarFragment}"></nav>
+</div>
+<header class="flex justify-center items-center mt-10">
+    <div style="margin-right: 50px;">
+        <img class="mask mask-circle w-48 h-48"
+             src="https://daisyui.com/images/stock/photo-1567653418876-5bb0e566e1c2.jpg"/>
+        <input type="file" class="file-input w-full max-w-xs h-10">
+    </div>
+    <form th:action="@{/user/update}" method="post">
+        <div style="margin-left: 40px;">
+            <input type="hidden" id="error" th:if="${error!=null}" th:value="${error}">
+            <label class="input input-bordered flex items-center gap-2">
+                이름 :
+                <input type="text" class="grow" id="nameInput" th:value="${siteUser.name}" name="name"/>
+            </label>
+            <label class="input input-bordered flex items-center gap-2">
+                이메일 :
+                <input type="text" class="grow" id="emailInput" readonly th:value="${siteUser.email}" name="email"/>
+            </label>
+            <label class="input input-bordered flex items-center gap-2">
+                닉네임 :
+                <input type="text" class="grow" id="nickNameInput" th:value="${siteUser.nickName}" name="nickName"/>
+            </label>
+            <div class="inline-flex">
+                <label class="input input-bordered flex items-center gap-2">
+                    휴대폰번호 :
+                    <input type="text" class="grow" id="numberInput" th:value="${siteUser.number}" name="number"/>
+                </label>
+                <button class="btn btn-outline btn-primary">변경</button>
+            </div>
+        </div>
+    </form>
+</header>
+<script th:inline="javascript">
+    const error =document.getElementById('error');
+    alert(error.value);
+</script>
 </body>
 </html>

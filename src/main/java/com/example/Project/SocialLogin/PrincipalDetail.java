@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Map;
 
 public class PrincipalDetail implements UserDetails, OAuth2User{
+    @Setter
     private SiteUser siteUser;
     private Map<String,Object> attributes;
 
@@ -86,7 +87,5 @@ public class PrincipalDetail implements UserDetails, OAuth2User{
     public SiteUser getUser(){
         return siteUser;
     }
-//    public String getUrl(){
-//        return siteUser.getUrl();
-//    }
+
 }

@@ -1,20 +1,28 @@
 package com.example.Project.User;
 
+import com.example.Project.SocialLogin.PrincipalDetail;
+import com.example.Project.SocialLogin.PrincipalDetailsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
+    private final PrincipalDetailsService principalDetailsService;
 
     @GetMapping("/signup")
     public String signup(UserCreateForm userCreateForm) {
@@ -33,7 +41,7 @@ public class UserController {
 
         try {
             userService.create(userCreateForm.getName(), userCreateForm.getEmail(), userCreateForm.getPassword1(),
-                    userCreateForm.getNickName(),  userCreateForm.getNumber());
+                    userCreateForm.getNickName(), userCreateForm.getNumber());
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
             bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
@@ -53,4 +61,39 @@ public class UserController {
         return "login/login_form";
     }
 
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/profile")
+    public String profile(Model model, @AuthenticationPrincipal PrincipalDetail principalDetail) {
+        // userDetails 객체를 통해 현재 사용자 정보에 접근 가능
+        if (principalDetail != null) {
+            SiteUser siteUser = principalDetail.getUser();
+            if (siteUser != null) {
+                model.addAttribute("siteUser", siteUser);
+//                model.addAttribute("name", siteUser.getName());
+//                model.addAttribute("email", siteUser.getEmail());
+//                model.addAttribute("nickName", siteUser.getNickName());
+//                model.addAttribute("number", siteUser.getNumber());
+            }
+        }
+        return "profile/profile_form";
+    }
+
+    @PostMapping("/update")
+    @PreAuthorize("isAuthenticated()")
+    public String updateUserProfile(@AuthenticationPrincipal PrincipalDetail principalDetail,
+                                    @RequestParam("name") String name,
+                                    @RequestParam("email") String email,
+                                    @RequestParam("nickName") String nickName,
+                                    @RequestParam("number") String number, RedirectAttributes redirectAttributes) {
+        if (userService.hasUser(number, nickName, email))
+            redirectAttributes.addFlashAttribute("error", "중복된 값입니다.");
+        else {
+            SiteUser user = userService.updateUserProfile(name, email, nickName, number);
+            if (user != null)
+                principalDetail.setSiteUser(user);
+        }
+        // 프로필 페이지로 리다이렉트
+        return "redirect:/user/profile";
+    }
 }

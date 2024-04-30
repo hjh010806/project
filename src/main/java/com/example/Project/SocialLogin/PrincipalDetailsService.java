@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 
 @Service
 public class PrincipalDetailsService implements UserDetailsService {
@@ -25,9 +26,10 @@ public class PrincipalDetailsService implements UserDetailsService {
     //함수 종료시 @AuthenticationPrincipal 어노테이션이 만들어진다.
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        SiteUser siteUser = userRepository.findByEmail(email);
-        if (siteUser == null)
+        Optional<SiteUser> siteUser = userRepository.findByEmail(email);
+        if (!siteUser.isPresent())
             throw new UsernameNotFoundException("해당하는 이메일이 없습니다. : " + email);
-        return new PrincipalDetail(siteUser);
+        SiteUser user = siteUser.get();
+        return new PrincipalDetail(user);
     }
 }

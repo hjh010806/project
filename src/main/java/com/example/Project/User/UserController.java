@@ -96,4 +96,12 @@ public class UserController {
         // 프로필 페이지로 리다이렉트
         return "redirect:/user/profile";
     }
+<<<<<<< HEAD
+=======
+
+    @RequestMapping("/findPw")
+    public String find_pw_form() throws Exception {
+        return "login/passwordChange";
+    }
+>>>>>>> aa24f00274921681faced4aa1b6aeccb532ff0a9
 }

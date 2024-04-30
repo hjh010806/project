@@ -1,25 +1,24 @@
 <head xmlns="http://www.w3.org/1999/html">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css">
+
 </head>
 <nav th:fragment="navbarFragment">
-    <div class="navbar bg-base-100">
+    <div class="navbar bg-purple-100 ">
         <div class="col-6 w-2/5">
             <a href="/">
                 <img src="/logo/logo.png" class="logo-icon w-10 h-10">
             </a>
         </div>
-        <div class="flex-none gap-2 w-3/5" style="position: relative;">
-            <div class="input-group" style="margin-right: 40%;">
-                <input type="text" placeholder="Type here" class="input input-bordered input-primary w-30"
-                       th:value="${kw}"/>
-                <button class="btn btn-outline-secondary " type="button" id="btn_search">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
-                         class="w-4 h-4 opacity-70">
-                        <path fill-rule="evenodd"
-                              d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                              clip-rule="evenodd"/>
-                    </svg>
-                </button>
+        <div class="flex-none w-3/5" style="position: relative;">
+            <div class="input-group" style="display: flex; align-items: center;">
+                <input type="text" placeholder="Type here" class="input input-ghost w-full max-w-xs" th:value="${kw}"/>
+                <div class="input-group" style="position: relative;">
+                    <!-- 이미지 -->
+                    <img src="/navbar/search.png" class="w-10 h-10" id="search_image" style="cursor: pointer;">
+                    <!-- 버튼 -->
+                    <button class="btn btn-outline-secondary" type="button" id="btn_search" style="position: absolute; top: 0; left: 0; opacity: 0;">
+                    </button>
+                </div>
             </div>
             <div class="dropdown dropdown-end" style="position: absolute; right: 30px;">
                 <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
@@ -39,3 +38,15 @@
         </div>
     </div>
 </nav>
+<script>
+    // 이미지 요소를 가져옵니다.
+    var searchImage = document.querySelector("#search_image");
+    // 버튼 요소를 가져옵니다.
+    var searchButton = document.querySelector("#btn_search");
+
+    // 이미지를 클릭할 때마다 이벤트를 처리합니다.
+    searchImage.addEventListener("click", function() {
+        // 버튼을 클릭한 것과 동일한 동작을 수행합니다.
+        searchButton.click();
+    });
+</script>

@@ -27,6 +27,8 @@ public interface UserRepository extends JpaRepository<SiteUser, Long> {
         "  email = :email ")
     List<SiteUser> checklist(String number, String nickName, String email);
 
+    Optional<SiteUser> findByPassword(String password);
+
 //    List<SiteUser> checklist(String number, String nickName, String email) {
 //        BooleanBuilder builder = new BooleanBuilder();
 //        if (number != null) {

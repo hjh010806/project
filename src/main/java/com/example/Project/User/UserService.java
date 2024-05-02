@@ -17,7 +17,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     public boolean hasUser(String number, String nickName, String email) {
-        return userRepository.checklist(number, nickName, email).size() > 0;
+        return userRepository.checklist(number, nickName, email).size() > 1;
     }
 
     public SiteUser create(String name, String email, String password, String nickName, String number) {
@@ -44,9 +44,36 @@ public class UserService {
             user.setEmail(email);
             user.setNickName(nickName);
             user.setNumber(number);
+//            if(password.trim().length() != 0 && user.getPassword() != password){
+//               user.setPassword(passwordEncoder.encode(password));
+//            }
+
             // 수정된 정보 저장
             return userRepository.save(user);
         } else return null;
+    }
+
+    @Transactional
+    public SiteUser updateUserPassword(Long userId, String currentPassword, String newPassword) {
+        // 사용자 식별자를 기반으로 사용자를 가져옴
+        Optional<SiteUser> userToUpdate = userRepository.findById(userId);
+
+        if (userToUpdate.isPresent()) {
+            SiteUser user = userToUpdate.get();
+
+            // 현재 비밀번호가 일치하는지 확인
+            if (passwordEncoder.matches(currentPassword, user.getPassword())) {
+                // 새로운 비밀번호를 해싱하여 설정
+                user.setPassword(passwordEncoder.encode(newPassword));
+
+                // 사용자 엔터티를 저장하여 변경 사항을 데이터베이스에 반영
+                return userRepository.save(user);
+            } else {
+                throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+            }
+        } else {
+            throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
+        }
     }
 
     public SiteUser userEmailCheck(String userEmail, String userName) {

@@ -109,13 +109,13 @@ public class UserController {
                            @Valid UserPasswordForm userPasswordForm,
                            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "profile/profile"; // 오류가 있으면 프로필 페이지로 다시 이동
+            return "profile/profile_form"; // 오류가 있으면 프로필 페이지로 다시 이동
         }
 
         // 새로운 비밀번호 확인
         if (!userPasswordForm.getNewPassword1().equals(userPasswordForm.getNewPassword2())) {
             bindingResult.rejectValue("newPassword2", "passwordInCorrect", "새로운 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
-            return "profile/profile";
+            return "profile/profile_form";
         }
         // 사용자의 아이디를 가져옵니다.
         Long userId = principalDetail.getUser().getId();

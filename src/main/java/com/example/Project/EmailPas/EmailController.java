@@ -33,7 +33,7 @@ public class EmailController {
     };
 
     @PostMapping("/password")
-    public String password(@RequestParam(value = "userEmail", defaultValue = "") String userEmail, @RequestParam(value = "userName",defaultValue = "") String userName, Model model) {
+    public String password(@RequestParam(value = "email", defaultValue = "") String userEmail, @RequestParam(value = "name",defaultValue = "") String userName, Model model) {
         if(userEmail.equals("") && userName.equals("")){
             model.addAttribute("error","이메일과 아이디를 확인해주세요.");
             return "changePassword";
@@ -59,6 +59,6 @@ public class EmailController {
 
         emailService.sendEmail(userEmail, "비밀번호 변경 내용입니다.", "변경된 비밀번호는 " + password + " 입니다.");
         userService.changePassword(user, password);
-        return "redirect:/question/list";
+        return "redirect:/user/login";
     }
 }

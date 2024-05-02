@@ -1,35 +1,44 @@
-<head xmlns="http://www.w3.org/1999/html">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css">
-
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css" rel="stylesheet" type="text/css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <nav th:fragment="navbarFragment">
-    <div class="navbar bg-purple-100 ">
-        <div class="col-6 w-2/5">
+    <div class="navbar bg-purple-100 flex justify-between items-center">
+        <!-- 로고 -->
+        <div class="w-1/5 ml-4">
             <a href="/">
                 <img src="/logo/logo.png" class="logo-icon w-10 h-10">
             </a>
         </div>
-        <div class="flex-none w-3/5" style="position: relative;">
-            <div class="input-group" style="display: flex; align-items: center;">
+
+        <!-- 검색 입력창 -->
+        <div class="w-3/5 text-center">
+            <div class="form-control relative">
                 <input type="text" placeholder="Type here" class="input input-ghost w-full max-w-xs" th:value="${kw}"/>
-                <div class="input-group" style="position: relative;">
+                <div class="input-group absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                     <!-- 이미지 -->
                     <img src="/navbar/search.png" class="w-10 h-10" id="search_image" style="cursor: pointer;">
                     <!-- 버튼 -->
-                    <button class="btn btn-outline-secondary" type="button" id="btn_search" style="position: absolute; top: 0; left: 0; opacity: 0;">
+                    <button class="btn btn-outline-secondary" type="button" id="btn_search" style="opacity: 0;">
                     </button>
                 </div>
             </div>
-            <div class="dropdown dropdown-end" style="position: absolute; right: 30px;">
+        </div>
+
+        <!-- 드롭다운 -->
+        <div class="w-1/5 mr-4 text-right">
+            <div class="dropdown dropdown-end">
                 <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
                     <div class="w-10 rounded-full">
                         <img alt="프로필 이미지" th:src="@{${profileImages}}"/>
                     </div>
                 </div>
-                <ul tabindex="0"
-                    class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
+                <ul tabindex="0" class="mt-3 z-10 p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
                     <li class="nav-item">
                         <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/profile}">내 정보</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a>
                         <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a>
                     </li>
@@ -38,15 +47,3 @@
         </div>
     </div>
 </nav>
-<script>
-    // 이미지 요소를 가져옵니다.
-    var searchImage = document.querySelector("#search_image");
-    // 버튼 요소를 가져옵니다.
-    var searchButton = document.querySelector("#btn_search");
-
-    // 이미지를 클릭할 때마다 이벤트를 처리합니다.
-    searchImage.addEventListener("click", function() {
-        // 버튼을 클릭한 것과 동일한 동작을 수행합니다.
-        searchButton.click();
-    });
-</script>

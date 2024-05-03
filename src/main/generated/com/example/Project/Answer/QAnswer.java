@@ -48,7 +48,7 @@ public class QAnswer extends EntityPathBase<Answer> {
 
     public QAnswer(Class<? extends Answer> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.listMain = inits.isInitialized("listMain") ? new com.example.Project.List.QListMain(forProperty("listMain")) : null;
+        this.listMain = inits.isInitialized("listMain") ? new com.example.Project.List.QListMain(forProperty("listMain"), inits.get("listMain")) : null;
     }
 
 }

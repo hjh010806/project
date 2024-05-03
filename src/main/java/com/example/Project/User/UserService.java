@@ -1,10 +1,8 @@
 package com.example.Project.User;
 
+import com.example.Project.Main.DataNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +18,7 @@ public class UserService {
         return userRepository.checklist(number, nickName, email).size() > 1;
     }
 
-    public SiteUser create(String name, String email, String password, String nickName, String number) {
+    public SiteUser createUser(String name, String email, String password, String nickName, String number) {
         SiteUser user = SiteUser.builder()
                 .name(name)
                 .email(email)
@@ -87,5 +85,13 @@ public class UserService {
     public void changePassword(SiteUser siteUser, String password){
         siteUser.setPassword(passwordEncoder.encode(password));
         userRepository.save(siteUser);
+    }
+
+    public SiteUser getUser(String email) {
+        Optional<SiteUser> siteUser = this.userRepository.findByEmail(email);
+        if (siteUser.isPresent())
+            return siteUser.get();
+        else
+            throw new DataNotFoundException("siteuser not found");
     }
 }

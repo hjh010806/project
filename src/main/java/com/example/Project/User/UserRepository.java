@@ -1,9 +1,11 @@
 package com.example.Project.User;
 
 
+import com.example.Project.List.ListMain;
 import com.querydsl.core.BooleanBuilder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,21 +29,8 @@ public interface UserRepository extends JpaRepository<SiteUser, Long> {
         "  email = :email ")
     List<SiteUser> checklist(String number, String nickName, String email);
 
+    Optional<ListMain> findByNickName(String nickName);
+
     Optional<SiteUser> findByPassword(String password);
 
-//    List<SiteUser> checklist(String number, String nickName, String email) {
-//        BooleanBuilder builder = new BooleanBuilder();
-//        if (number != null) {
-//            builder.or(siteUser.number.eq(number));
-//        }
-//        if (nickName != null) {
-//            builder.or(siteUser.nickName.eq(nickName));
-//        }
-//        if (email != null) {
-//            builder.or(siteUser.email.eq(email));
-//        }
-//        return queryFactory.selectFrom(siteUser)
-//                .where(builder)
-//                .fetch();
-//    }
 }

@@ -1,0 +1,96 @@
+<html lang="en">
+<head>
+    <title>게시물 등록</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css" rel="stylesheet" type="text/css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/82aeaf01ca.js" crossorigin="anonymous"></script>
+    <!--  네비게이션바 상단 고정  -->
+    <style>
+        /* navbar를 상단에 고정시키는 CSS */
+        .navbar-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<div>
+    <nav th:replace="~{./navbar/navbar :: navbarFragment}"></nav>
+</div>
+<body>
+<div>
+    <form th:action="@{/home/createList}" method="post" onsubmit="return validateForm()">
+        <div class="flex justify-center items-center mt-10">
+            <div class="flex justify-end w-3/6 items-center h-[50px]"
+                 style="border: 1px solid #ccc; border-radius: 10px;">
+                <div class="flex items-center justify-center mr-96 text-xl font-bold">게시물</div>
+                <a href="#" onclick="openFileUpload()" class="flex items-center justify-start mr-4">
+                    <i class="fa-solid fa-image"></i>
+                    <span class="ml-2">사진</span>
+                </a>
+                <input type="file" id="file-upload" class="file-input w-full max-w-xs h-10" style="display: none;">
+            </div>
+        </div>
+        <div id="parent" class="flex justify-center items-center mt-2" style="height: auto;">
+            <div id="child" class="flex justify-center items-center border border-gray-300 rounded-lg">
+                <img src="/list/다운로드.jpg" id="image">
+            </div>
+        </div>
+        <div class="flex justify-center items-center mt-2">
+            <div class="flex justify-center items-center w-3/6 h-[200px] border border-gray-300 rounded-lg">
+                <textarea th:field="${listForm.content}" class="w-full h-full" placeholder="빈 상자일 때 내용을 입력하세요."
+                          style="resize: vertical;"></textarea>
+            </div>
+        </div>
+        <div class="flex justify-center items-center">
+            <div class="flex justify-end items-end mt-2 w-3/6">
+                <div id="errorMessage" class="error-message text-red-500 flex"></div>
+                <button class="btn btn-outline btn-primary" type="submit">게시글 등록
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+<script>
+    function openFileUpload() {
+        // 파일 업로드 창 열기
+        document.getElementById('file-upload').click();
+    }
+
+    document.getElementById('file-upload').addEventListener('change', function() {
+        // 파일이 선택되면 업로드 작업을 수행하는 함수 호출
+        uploadFile(this.files[0]);
+    });
+
+    function uploadFile(file) {
+        // 파일 업로드 작업 수행
+        // 예를 들어, FormData를 사용하여 파일을 서버로 전송하는 등의 작업을 수행합니다.
+    }
+    window.onload = function() {
+        var parent = document.getElementById('parent');
+        var child = document.getElementById('child');
+        var image = document.getElementById('image');
+
+        // 이미지 로드 후 부모 요소의 크기를 자식 요소인 이미지의 크기로 조절
+        image.onload = function() {
+            parent.style.height = child.offsetHeight + 'px';
+        }
+    }
+    function validateForm() {
+    var content = document.getElementById("content").value;
+    var errorMessageElement = document.getElementById("errorMessage");
+
+    if (content.trim() === "") {
+        errorMessageElement.innerHTML = "내용은 필수입니다.";
+        errorMessageElement.style.display = "block"; // 오류 메시지 표시
+        return false; // 폼 전송 중지
+    } else {
+        errorMessageElement.style.display = "none"; // 오류 메시지 감춤
+        return true; // 폼 전송 진행
+    }
+}
+</script>
+</html>

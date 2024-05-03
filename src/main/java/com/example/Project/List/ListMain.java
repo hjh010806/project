@@ -1,12 +1,17 @@
 package com.example.Project.List;
 
 import com.example.Project.Answer.Answer;
+import com.example.Project.User.SiteUser;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -20,6 +25,16 @@ public class ListMain {
 
     private LocalDateTime createDate;
 
+    @ManyToOne
+    private SiteUser author;
+
     @OneToMany(mappedBy = "listMain", cascade = CascadeType.REMOVE)
-    private java.util.List<Answer> answerList;
+    private List<Answer> answerList;
+
+    @Builder
+    public ListMain(String content) {
+        this.content = content;
+        this.createDate = LocalDateTime.now();
+    }
+
 }

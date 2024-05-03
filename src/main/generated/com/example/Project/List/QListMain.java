@@ -18,9 +18,13 @@ public class QListMain extends EntityPathBase<ListMain> {
 
     private static final long serialVersionUID = -1969678495L;
 
+    private static final PathInits INITS = PathInits.DIRECT2;
+
     public static final QListMain listMain = new QListMain("listMain");
 
     public final ListPath<com.example.Project.Answer.Answer, com.example.Project.Answer.QAnswer> answerList = this.<com.example.Project.Answer.Answer, com.example.Project.Answer.QAnswer>createList("answerList", com.example.Project.Answer.Answer.class, com.example.Project.Answer.QAnswer.class, PathInits.DIRECT2);
+
+    public final com.example.Project.User.QSiteUser author;
 
     public final StringPath content = createString("content");
 
@@ -29,15 +33,24 @@ public class QListMain extends EntityPathBase<ListMain> {
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public QListMain(String variable) {
-        super(ListMain.class, forVariable(variable));
+        this(ListMain.class, forVariable(variable), INITS);
     }
 
     public QListMain(Path<? extends ListMain> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QListMain(PathMetadata metadata) {
-        super(ListMain.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QListMain(PathMetadata metadata, PathInits inits) {
+        this(ListMain.class, metadata, inits);
+    }
+
+    public QListMain(Class<? extends ListMain> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.author = inits.isInitialized("author") ? new com.example.Project.User.QSiteUser(forProperty("author")) : null;
     }
 
 }

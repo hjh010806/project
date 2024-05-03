@@ -4,13 +4,9 @@ import com.example.Project.SocialLogin.PrincipalDetail;
 import com.example.Project.SocialLogin.PrincipalDetailsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,7 +36,7 @@ public class UserController {
         }
 
         try {
-            userService.create(userCreateForm.getName(), userCreateForm.getEmail(), userCreateForm.getPassword1(),
+            userService.createUser(userCreateForm.getName(), userCreateForm.getEmail(), userCreateForm.getPassword1(),
                     userCreateForm.getNickName(), userCreateForm.getNumber());
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
@@ -109,7 +105,7 @@ public class UserController {
                            @Valid UserPasswordForm userPasswordForm,
                            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "profile/profile_form"; // 오류가 있으면 프로필 페이지로 다시 이동
+            return "redirect:/user/profile"; // 오류가 있으면 프로필 페이지로 다시 이동
         }
 
         // 새로운 비밀번호 확인

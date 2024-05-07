@@ -26,14 +26,7 @@
         <div class="flex flex-row h-[50px] w-full bg-purple-100">
             <div class="flex w-[50px] h-[50px]">
                 <img src="/logo/user.jpg" alt="" style="border-radius: 50%;">
-                <div class="content-end" th:if="${listMain.author != null}" th:text="${listMain.author.nickName}"></div>
-            </div>
-            <div class="flex w-full justify-end dropdown dropdown-bottom">
-                <i tabindex="0" role="button" class="fa-solid fa-bars btn bg-purple-100 border border-purple-100 flex justify-center items-center w-[50px] h-[50px]"></i>
-                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow rounded-box w-[100px]">
-                    <li><a th:href="@{|/home/modify/${id}|}" method="post">수정</a></li>
-                    <li><a th:href="@{|/home/delete/${id}|}">삭제</a></li>
-                </ul>
+                <div class="content-end" th:if="${listMain != null and listMain.author != null}" th:text="${listMain.author.nickName}"></div>
             </div>
         </div>
         <div class="flex h-[550px] w-full">

@@ -19,6 +19,7 @@ public interface UserRepository extends JpaRepository<SiteUser, Long> {
 
     SiteUser findByName(String name);
     Optional<SiteUser> findById(Long id);
+
 @Query("select u " +
         "from SiteUser u " +
         "where " +

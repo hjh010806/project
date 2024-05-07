@@ -1,11 +1,14 @@
 package com.example.Project.User;
 
+import com.example.Project.List.ListMain;
+import com.example.Project.List.ListRepository;
 import com.example.Project.Main.DataNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -13,6 +16,7 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ListRepository listRepository;
 
     public boolean hasUser(String number, String nickName, String email) {
         return userRepository.checklist(number, nickName, email).size() > 1;
@@ -93,5 +97,9 @@ public class UserService {
             return siteUser.get();
         else
             throw new DataNotFoundException("siteuser not found");
+    }
+
+    public List<ListMain> getAuthorList(Integer id) {
+        return listRepository.findByAuthorId(id);
     }
 }

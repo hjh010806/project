@@ -5,10 +5,8 @@ import com.example.Project.User.SiteUser;
 import com.example.Project.User.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 
@@ -34,6 +32,16 @@ public class ListService {
             return listMain.get();
         else
             throw new DataNotFoundException("listMain not found");
+    }
+
+    public void modify(ListMain listMain, String content) {
+        listMain.setContent(content);
+        listMain.setCreateDate(LocalDateTime.now());
+        this.listRepository.save(listMain);
+    }
+
+    public void delete(ListMain listMain) {
+        this.listRepository.delete(listMain);
     }
 
 }

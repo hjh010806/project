@@ -118,9 +118,13 @@ public class UserController {
 
         // 비밀번호 변경을 userService에 위임합니다.
         userService.updateUserPassword(userId, userPasswordForm.getPassword(), userPasswordForm.getNewPassword1());
-
-
-
         return "redirect:/user/profile";
     }
+
+    @GetMapping("/list/{id}")
+    public String userList(Model model, @PathVariable("id") Integer id) {
+        model.addAttribute("authorList", userService.getAuthorList(id));
+        return "profile/profile_form";
+    }
+
 }

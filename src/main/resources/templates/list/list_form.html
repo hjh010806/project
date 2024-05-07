@@ -21,7 +21,7 @@
 </div>
 <body>
 <div>
-    <form th:action="@{/home/createList}" method="post" onsubmit="return validateForm()">
+    <form th:action="@{|/home/${destination}|}" method="post" onsubmit="return validateForm()">
         <div class="flex justify-center items-center mt-10">
             <div class="flex justify-end w-3/6 items-center h-[50px]"
                  style="border: 1px solid #ccc; border-radius: 10px;">

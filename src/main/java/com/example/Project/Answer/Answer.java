@@ -1,6 +1,7 @@
 package com.example.Project.Answer;
 
 import com.example.Project.List.ListMain;
+import com.example.Project.User.SiteUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,4 +23,7 @@ public class Answer {
 
     @ManyToOne
     private ListMain listMain;
+
+    @ManyToOne
+    private SiteUser author;
 }

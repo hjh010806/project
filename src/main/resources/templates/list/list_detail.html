@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
+<html lang="kr" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>내 정보</title>
@@ -18,7 +17,78 @@
         }
     </style>
 </head>
+<div>
+    <nav th:replace="~{./navbar/navbar :: navbarFragment}"></nav>
+</div>
 <body>
-
+<div class="flex w-full h-[800px] mt-[50px] mr-[30px] ml-[30px] justify-center">
+    <div class="flex flex-col w-[1000px] border border-gray-300">
+        <div class="h-[50px] w-full bg-purple-100">
+            <div class="inline-flex w-[50px] h-[50px]">
+                <img src="/logo/user.jpg" alt="" style="border-radius: 50%;">
+                <div class="content-end" th:if="${listMain.author != null}" th:text="${listMain.author.nickName}"></div>
+            </div>
+        </div>
+        <div class="flex h-[550px] w-full">
+            <!--            게시물이미지-->
+        </div>
+        <div>
+            <div class="h-[30px] w-full border-t border-gray-300">
+                <div class="flex justify-center items-center w-[30px] h-[30px]">
+                    <label class="heart-switch w-full h-full mt-[20px] ml-[20px]" id="heartSwitch">
+                        <input type="checkbox" id="toggleHeart" style="display: none;">
+                        <i class="fas fa-heart" id="heartOn" style="display: none;"></i>
+                        <i class="far fa-heart" id="heartOff"></i>
+                    </label>
+                </div>
+            </div>
+            <div class="flex flex-col ml-[20px]">
+                <div class="flex flex-row">
+                    <img class=" w-[30px] h-[30px]" src="/logo/user.jpg" alt="" style="border-radius: 50%;">
+                    <span class="overflow-auto break-words h-[150px] text-lg text-bleak font-bold w-full"
+                          th:text="${listMain.author.nickName} + ' : ' + ${listMain.content}"></span>
+                </div>
+                <span class="text-gray-500 font-bold"
+                      th:text="${#temporals.format(listMain.createDate, 'yyyy-MM-dd HH:mm')}"></span>
+            </div>
+        </div>
+    </div>
+    <div class="flex w-[700px] flex-col border border-gray-300">
+        <div class="flex w-full h-[750px] flex-col">
+            <div class="flex overflow-auto break-words flex-col" th:each="answer : ${listMain.answerList}">
+                <div class="flex flex-row">
+                    <img class=" w-[30px] h-[30px]" src="/logo/user.jpg" alt="" style="border-radius: 50%;">
+                    <span class="text-lg text-gray-800 font-bold"
+                          th:text="${answer.author.nickName + ' : ' + answer.content}"></span>
+                </div>
+                <span class="text-gray-500 text-sm"
+                      th:text="${#temporals.format(answer.createDate, 'yyyy-MM-dd HH:mm')}"></span>
+            </div>
+        </div>
+        <div class="w-full h-[50px] border-t border-gray-300">
+            <form th:action="@{|/answer/create/${id}|}" method="post">
+                <div class="flex border border-gray-300">
+                    <input class="w-full" type="text" name="content" placeholder="댓글 달기...">
+                    <button class="btn btn-outline btn-primary" type="submit">등록</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
+<script>
+    const toggleHeart = document.getElementById('toggleHeart');
+    const heartOn = document.getElementById('heartOn');
+    const heartOff = document.getElementById('heartOff');
+
+    toggleHeart.addEventListener('change', function() {
+        if (this.checked) {
+            heartOn.style.display = 'inline'; // on
+            heartOff.style.display = 'none'; // off
+        } else {
+            heartOn.style.display = 'none'; // off
+            heartOff.style.display = 'inline'; // on
+        }
+    });
+</script>
 </html>

@@ -1,11 +1,13 @@
 package com.example.Project.List;
 
+import com.example.Project.Answer.AnswerForm;
 import com.example.Project.SocialLogin.PrincipalDetail;
 import com.example.Project.User.SiteUser;
 import com.example.Project.User.UserService;
 import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -55,10 +57,10 @@ public class ListController {
         return "redirect:/";
     }
 
-    @GetMapping("/detail/{nickName}")
-    public String detail(Model model, @PathVariable("nickName") String nickName){
-        ListMain listMain =this.listService.getListMain(nickName);
-        model.addAttribute("nickName", nickName);
+    @GetMapping("/detail/{id}")
+    public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm){
+        ListMain listMain =this.listService.getListMain(id);
+        model.addAttribute("listMain", listMain);
 
         return "list/list_detail";
     }

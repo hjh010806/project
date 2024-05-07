@@ -28,8 +28,8 @@ public class ListService {
         this.listRepository.save(listMain);
     }
 
-    public ListMain getListMain(String nickName) {
-        Optional<ListMain> listMain = this.userRepository.findByNickName(nickName);
+    public ListMain getListMain(Integer id) {
+        Optional<ListMain> listMain = this.listRepository.findById(id);
         if (listMain.isPresent())
             return listMain.get();
         else

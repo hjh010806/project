@@ -4,9 +4,17 @@ import com.example.Project.Main.DataNotFoundException;
 import com.example.Project.User.SiteUser;
 import com.example.Project.User.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -17,6 +25,9 @@ public class ListService {
     private final UserRepository userRepository;
 
 
+    public List<ListMain> getList() {
+        return this.listRepository.findAll();
+    }
     //리스트 생성
     public void create(String content, SiteUser user) {
         ListMain listMain = new ListMain();
@@ -32,6 +43,10 @@ public class ListService {
             return listMain.get();
         else
             throw new DataNotFoundException("listMain not found");
+    }
+
+    public List<ListMain> searchByKeyword(String kw) {
+        return this.listRepository.findAllByKeyword(kw);
     }
 
     public void modify(ListMain listMain, String content) {

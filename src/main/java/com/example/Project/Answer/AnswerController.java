@@ -32,7 +32,7 @@ public class AnswerController {
     public String createAnswer(Model model, @PathVariable("id") Integer id, AnswerForm answerForm, Principal principal) {
         ListMain listMain = this.listService.getListMain(id);
         model.addAttribute("listMain", listMain);
-        return "list_detail";
+        return "list/list_detail";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -42,7 +42,7 @@ public class AnswerController {
         SiteUser siteUser = this.userService.getUser(principal.getName());
         model.addAttribute("listMain", listMain);
         if (bindingResult.hasErrors())
-            return "list_detail";
+            return "list/list_detail";
         Answer answer = answerService.create(listMain, answerForm.getContent(), siteUser);
         return String.format("redirect:/home/detail/%s", answer.getListMain().getId());
     }

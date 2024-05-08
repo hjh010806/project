@@ -30,15 +30,6 @@ public class ListController {
         return "main_form";
     }
 
-    @GetMapping("/search")
-    public String search(Model model, @RequestParam("kw") String kw) {
-        List<ListMain> searchResults = listService.searchByKeyword(kw);
-        model.addAttribute("listMain", searchResults);
-        return "main_form"; // 또는 검색 결과를 보여줄 다른 페이지로 이동하셔도 됩니다.
-    }
-
-
-
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/createList")
     public String listCreate(Model model, ListForm listForm) {
@@ -102,5 +93,11 @@ public class ListController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         this.listService.delete(listMain);
         return "redirect:/";
+    }
+
+    @GetMapping("/list/{id}")
+    public String userList(Model model, @PathVariable("id") Integer id) {
+        model.addAttribute("authorList", listService.getAuthorList(id));
+        return "profile/profile_form";
     }
 }

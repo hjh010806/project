@@ -34,4 +34,15 @@ public interface UserRepository extends JpaRepository<SiteUser, Long> {
 
     Optional<SiteUser> findByPassword(String password);
 
+
+    @Query("select "
+            + "distinct u "
+            + "from SiteUser u "
+            + "where "
+            + "u.name like %:kw% "
+            + "or u.nickName like %:kw% "
+            + "or u.email like :kw "
+    )
+    List<SiteUser> findAllByKeyword(@Param("kw") String kw);
+
 }

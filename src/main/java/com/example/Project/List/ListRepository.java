@@ -14,15 +14,4 @@ public interface ListRepository extends JpaRepository<ListMain, Integer> {
 
     List<ListMain> findByAuthorId(Integer authorId);
 
-    @Query("select "
-            + "distinct l "
-            + "from ListMain l "
-            + "left outer join SiteUser u on l.author=u "
-            + "where "
-            + "u.name like %:kw% "
-            + "or u.nickName like %:kw% "
-            + "or u.number like :kw "
-            + "or u.email like :kw "
-    )
-    List<ListMain> findAllByKeyword(@Param("kw") String kw);
 }

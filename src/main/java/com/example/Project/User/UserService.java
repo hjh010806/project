@@ -98,8 +98,17 @@ public class UserService {
         else
             throw new DataNotFoundException("siteuser not found");
     }
-
-    public List<ListMain> getAuthorList(Integer id) {
-        return listRepository.findByAuthorId(id);
+    public SiteUser getUserId(Long id) {
+        Optional<SiteUser> siteUser = this.userRepository.findById(id);
+        if (siteUser.isPresent())
+            return siteUser.get();
+        else
+            throw new DataNotFoundException("siteuser not found");
     }
+
+
+    public List<SiteUser> searchByKeyword(String kw) {
+        return this.userRepository.findAllByKeyword(kw);
+    }
+
 }

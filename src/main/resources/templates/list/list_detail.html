@@ -28,8 +28,10 @@
                 <img src="/logo/user.jpg" alt="" style="border-radius: 50%;">
                 <div class="content-end" th:if="${listMain.author != null}" th:text="${listMain.author.nickName}"></div>
             </div>
-            <div class="flex w-full justify-end dropdown dropdown-bottom">
-                <i tabindex="0" role="button" class="fa-solid fa-bars btn bg-purple-100 border border-purple-100 flex justify-center items-center w-[50px] h-[50px]"></i>
+            <div class="flex w-full justify-end dropdown dropdown-bottom" sec:authorize="isAuthenticated()"
+                 th:if="${listMain.author != null and #authentication.getPrincipal().getEmail() == listMain.author.email}">
+                <i tabindex="0" role="button"
+                   class="fa-solid fa-bars btn bg-purple-100 border border-purple-100 flex justify-center items-center w-[50px] h-[50px]"></i>
                 <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow rounded-box w-[100px]">
                     <li><a th:href="@{|/home/modify/${id}|}" method="post">수정</a></li>
                     <li><a th:href="@{|/home/delete/${id}|}">삭제</a></li>
@@ -61,15 +63,25 @@
         </div>
     </div>
     <div class="flex w-[700px] flex-col border border-gray-300">
-        <div class="flex w-full h-[750px] flex-col">
-            <div class="flex overflow-auto break-words flex-col" th:each="answer : ${listMain.answerList}">
+        <div class="flex overflow-auto w-full h-[750px] flex-col">
+            <div class="flex flex-col break-words" th:each="answer : ${listMain.answerList}">
                 <div class="flex flex-row">
-                    <img class=" w-[30px] h-[30px]" src="/logo/user.jpg" alt="" style="border-radius: 50%;">
+                    <img class="w-[30px] h-[30px]" src="/logo/user.jpg" alt="" style="border-radius: 50%;">
                     <span class="text-lg text-gray-800 font-bold"
                           th:text="${answer.author.nickName + ' : ' + answer.content}"></span>
                 </div>
-                <span class="text-gray-500 text-sm"
-                      th:text="${#temporals.format(answer.createDate, 'yyyy-MM-dd HH:mm')}"></span>
+                <div class="flex flex-row h-[30px] border-b border-gray-200">
+                    <span class="text-gray-500 text-sm w-full"
+                          th:text="${#temporals.format(answer.createDate, 'yyyy-MM-dd HH:mm')}"></span>
+                    <div class="flex w-[200px] justify-end dropdown dropdown-bottom" sec:authorize="isAuthenticated()"
+                         th:if="${answer.author != null and #authentication.getPrincipal().getEmail() == answer.author.email}">
+                        <i tabindex="0" role="button"
+                           class="fa-solid fa-bars btn border border-white flex justify-center items-center w-[50px] h-[30px]"></i>
+                        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow rounded-box w-[100px] text-sm">
+                            <li><a th:href="@{|/answer/delete/${answer.id}|}">삭제</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="w-full h-[50px] border-t border-gray-300">

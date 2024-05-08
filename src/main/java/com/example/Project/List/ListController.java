@@ -22,15 +22,22 @@ import java.util.List;
 public class ListController {
     private final ListService listService;
     private final UserService userService;
-    private final ListRepository listRepository;
 
     @GetMapping("/list")
     public String list(Model model) {
-        List<ListMain> mainList = this.listRepository.findAllOrderByCreateDateDesc();
+        List<ListMain> mainList = this.listService.getList();
         model.addAttribute("listMain", mainList);
-
         return "main_form";
     }
+
+    @GetMapping("/search")
+    public String search(Model model, @RequestParam("kw") String kw) {
+        List<ListMain> searchResults = listService.searchByKeyword(kw);
+        model.addAttribute("listMain", searchResults);
+        return "main_form"; // 또는 검색 결과를 보여줄 다른 페이지로 이동하셔도 됩니다.
+    }
+
+
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/createList")
@@ -53,10 +60,6 @@ public class ListController {
     @GetMapping("/detail/{id}")
     public String detail(Model model, @PathVariable("id") Integer id, Principal principal, AnswerForm answerForm) {
         ListMain listMain = this.listService.getListMain(id);
-        if (!listMain.getAuthor().getEmail().equals(principal.getName())) {
-            model.addAttribute("listMain", listMain);
-            return "list/detail_view_other";
-        }
         model.addAttribute("listMain", listMain);
         return "list/list_detail";
     }
@@ -68,9 +71,9 @@ public class ListController {
             return "main_form";
         }
         ListMain listMain = this.listService.getListMain(id);
-        if (!listMain.getAuthor().getEmail().equals(principal.getName())) {
+        if (!listMain.getAuthor().getEmail().equals(principal.getName()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
-        }
+
         model.addAttribute("destination", "modify/" + id.toString());
         listForm.setContent(listMain.getContent());
         return "list/list_form";
@@ -96,7 +99,7 @@ public class ListController {
     public String deleteList(Principal principal, @PathVariable("id") Integer id) {
         ListMain listMain = this.listService.getListMain(id);
         if (!listMain.getAuthor().getEmail().equals(principal.getName()))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         this.listService.delete(listMain);
         return "redirect:/";
     }

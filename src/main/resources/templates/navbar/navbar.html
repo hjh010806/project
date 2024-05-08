@@ -10,10 +10,10 @@
         </div>
         <div class="flex-none w-3/5" style="position: relative;">
             <div class="join" style="display: flex; align-items: center;">
-                <input type="text" placeholder="Search" class="input input-bordered join-item " th:value="${kw}"/>
-                <div class="input-group" style="position: relative;">
-                    <button class="btn join-item rounded-r-full bg-purple-300">Search</button>
-                </div>
+                <form th:action="@{/home/search}" method="get" class="input-group">
+                    <input type="text" placeholder="검색어를 입력하세요" name="kw" class="input input-bordered join-item" th:value="${kw}"/>
+                    <button type="submit" class="btn join-item rounded-r-full bg-purple-300">검색</button>
+                </form>
             </div>
             <div class="dropdown dropdown-end" style="position: absolute; right: 30px;">
                 <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">

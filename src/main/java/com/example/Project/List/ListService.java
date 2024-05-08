@@ -43,10 +43,6 @@ public class ListService {
             throw new DataNotFoundException("listMain not found");
     }
 
-    public List<ListMain> searchByKeyword(String kw) {
-        return this.listRepository.findAllByKeyword(kw);
-    }
-
     public void modify(ListMain listMain, String content) {
         listMain.setContent(content);
         listMain.setCreateDate(LocalDateTime.now());
@@ -55,6 +51,10 @@ public class ListService {
 
     public void delete(ListMain listMain) {
         this.listRepository.delete(listMain);
+    }
+
+    public List<ListMain> getAuthorList(Integer id) {
+        return listRepository.findByAuthorId(id);
     }
 
 }

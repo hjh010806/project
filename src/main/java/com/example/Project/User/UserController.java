@@ -13,6 +13,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/user")
@@ -71,6 +73,16 @@ public class UserController {
         return "profile/profile_form";
     }
 
+    @GetMapping("/profile/{id}")
+    public String userProfile(Model model,@PathVariable("id") Long id) {
+        // userDetails 객체를 통해 현재 사용자 정보에 접근 가능
+        SiteUser profileUser = this.userService.getUserId(id);
+            if (profileUser != null) {
+                model.addAttribute("profileUser", profileUser);
+            }
+        return "profile/profile_user_form";
+    }
+
     @PostMapping("/update")
     @PreAuthorize("isAuthenticated()")
     public String updateUserProfile(@AuthenticationPrincipal PrincipalDetail principalDetail,
@@ -121,10 +133,12 @@ public class UserController {
         return "redirect:/user/profile";
     }
 
-    @GetMapping("/list/{id}")
-    public String userList(Model model, @PathVariable("id") Integer id) {
-        model.addAttribute("authorList", userService.getAuthorList(id));
-        return "profile/profile_form";
+
+    @GetMapping("/search")
+    public String search(Model model, @RequestParam("kw") String kw) {
+        List<SiteUser> searchResults = userService.searchByKeyword(kw);
+        model.addAttribute("userProfile", searchResults);
+        return "list/search_list";
     }
 
 }

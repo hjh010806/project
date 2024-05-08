@@ -1,0 +1,80 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>내 정보</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css" rel="stylesheet" type="text/css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/82aeaf01ca.js" crossorigin="anonymous"></script>
+    <!--  네비게이션바 상단 고정  -->
+    <style>
+        /* navbar를 상단에 고정시키는 CSS */
+        .navbar-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<div>
+    <nav th:replace="~{./navbar/navbar :: navbarFragment}"></nav>
+</div>
+<header class="flex justify-center items-center mt-10">
+    <div style="margin-right: 50px;">
+        <img class="mask mask-circle w-48 h-48"
+             src="/logo/user.jpg"/>
+    </div>
+    <div class="inline-flex">
+        <div style="margin-left: 40px;">
+            <label class="flex items-center gap-2">
+                <span class="font-semibold">이름 :</span>
+                <span th:text="${profileUser.name}"></span>
+            </label>
+            <label class="flex items-center gap-2">
+                <span class="font-semibold">이메일 :</span>
+                <span th:text="${profileUser.email}"></span>
+            </label>
+            <label class="flex items-center gap-2">
+                <span class="font-semibold">닉네임 :</span>
+                <span th:text="${profileUser.nickName}"></span>
+            </label>
+        </div>
+    </div>
+</header>
+<body>
+<!-- 해당 유저의 게시물 이미지 등록후 구현 -->
+<div class="dropdown dropdown-bottom flex justify-center">
+    <div class="flex justify-between w-2/6 items-center h-[100px]">
+        <div role="button">
+            <i class="fa-regular fa-images">
+                <a>게시물</a>
+            </i>
+        </div>
+        <div role="button">
+            <i class="fa-regular fa-heart">
+                <a>좋아요</a>
+            </i>
+        </div>
+        <div role="button">
+            <i class="fa-solid fa-user">
+                <a class="">태그됨</a>
+            </i>
+        </div>
+    </div>
+</div>
+<div class="flex justify-center">
+    <div class="flex justify-between w-3/6" style="border-top: 1px solid #ccc;">
+        <div class="border border-gray-300 w-[250px] h-[250px] mt-[20px]">
+
+        </div>
+        <div class="border border-gray-300 w-[250px] h-[250px] mt-[20px]">
+
+        </div>
+        <div class="border border-gray-300 w-[250px] h-[250px] mt-[20px]">
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

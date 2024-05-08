@@ -1,0 +1,53 @@
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <title>내 정보</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css" rel="stylesheet" type="text/css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/82aeaf01ca.js" crossorigin="anonymous"></script>
+    <!--  네비게이션바 상단 고정  -->
+    <style>
+        /* navbar를 상단에 고정시키는 CSS */
+        .navbar-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<div>
+    <nav th:replace="~{./navbar/navbar :: navbarFragment}"></nav>
+</div>
+<body>
+<div class="flex justify-center mt-[50px]">
+    <div class="flex w-[1000px] flex-col h-full border border-gray-300">
+        <div class="flex justify-center items-center w-full h-[50px] bg-purple-200 text-lg">
+            <div class="flex flex-row">
+                <div class="flex w-[100px] justify-center">프로필</div>
+                <div class="flex w-[100px] justify-center">이름</div>
+                <div class="flex w-[400px] justify-center">닉네임</div>
+                <div class="flex w-[400px] justify-center">이메일</div>
+            </div>
+        </div>
+        <div class="flex justify-start items-center w-full border-b border-gray-300"
+             th:each="siteUser : ${userProfile}">
+            <a th:href="@{|/user/profile/${siteUser.id}|}" class="block w-full">
+                <div class="flex flex-row h-[50px]">
+                    <div class="flex w-[100px] justify-center items-center">
+                        <img class="w-[50px] h-[50px]" src="/logo/user.jpg" alt="" style="border-radius: 50%;">
+                    </div>
+                    <div class="flex w-[100px] justify-center items-center" th:if="${siteUser != null}"
+                         th:text="${siteUser.name}"></div>
+                    <div class="flex w-[400px] justify-center items-center" th:if="${siteUser != null}"
+                         th:text="${siteUser.nickName}"></div>
+                    <div class="flex w-[400px] justify-center items-center" th:if="${siteUser != null}"
+                         th:text="${siteUser.email}"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

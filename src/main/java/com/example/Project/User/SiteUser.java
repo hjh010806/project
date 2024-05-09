@@ -1,5 +1,6 @@
 package com.example.Project.User;
 
+import com.example.Project.Likes.Likes;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -35,6 +37,9 @@ public class SiteUser {
 
     private String provider;
     private String providerId;
+
+    @OneToMany(mappedBy = "siteUser", cascade = CascadeType.ALL)
+    private Set<Likes> likes;
 
     @Builder
     public SiteUser(String name, String password,String nickName ,String email, String role, String provider, String providerId, String number) {

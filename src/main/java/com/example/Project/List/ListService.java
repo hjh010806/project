@@ -57,4 +57,13 @@ public class ListService {
         return listRepository.findByAuthorId(id);
     }
 
+//    public void vote(ListMain listMain, SiteUser siteUser) {
+//        listMain.getVoter().add(siteUser);
+//        this.listRepository.save(listMain);
+//    }
+//
+//    public void deleteVote(ListMain listMain, SiteUser siteUser) {
+//        listMain.getVoter().remove(siteUser);
+//    }
+
 }

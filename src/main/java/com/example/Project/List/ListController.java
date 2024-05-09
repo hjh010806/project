@@ -1,12 +1,17 @@
 package com.example.Project.List;
 
 import com.example.Project.Answer.AnswerForm;
+import com.example.Project.Global.ListDTO;
+import com.example.Project.Likes.LikesService;
+import com.example.Project.SocialLogin.PrincipalDetail;
 import com.example.Project.User.SiteUser;
 import com.example.Project.User.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -22,17 +27,46 @@ import java.util.List;
 public class ListController {
     private final ListService listService;
     private final UserService userService;
+    private final LikesService likesService;
 
     @GetMapping("/list")
-    public String list(Model model) {
+    public String list(Model model, @AuthenticationPrincipal PrincipalDetail principalDetail) {
         List<ListMain> mainList = this.listService.getList();
-        model.addAttribute("listMain", mainList);
+        SiteUser user = principalDetail != null ? principalDetail.getUser() : null;
+        List<ListDTO> listDTOS = new ArrayList<>();
+        for (ListMain listMain : mainList)
+            listDTOS.add(ListDTO.builder().listMain(listMain).heart(user != null ? likesService.isLikes(listMain.getId(), user.getId()) : false).build());
+        model.addAttribute("listDTOS", listDTOS);
         return "main_form";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/list/createLikes/{id}")
+    public String createLikes(@PathVariable("id") int listMainId, @AuthenticationPrincipal PrincipalDetail principal) {
+        SiteUser siteUser = principal.getUser();
+        likesService.createLikes(listMainId, siteUser);
+        return "redirect:/home/list";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/list/deleteLikes/{id}")
+    public String deleteLikes(@PathVariable("id") long listMainId, Principal principal) {
+        SiteUser siteUser = userService.getUser(principal.getName());
+        likesService.deleteLikes(listMainId, siteUser.getId());
+        return "redirect:/home/list";
+    }
+
+    @GetMapping("/checkLikes/{listMainId}/{siteUserId}")
+    public ResponseEntity<?> checkLikes(@PathVariable("listMainId") long listMainId, @PathVariable("siteUserId") long siteUserId) {
+        boolean isLikes = likesService.isLikes(listMainId, siteUserId);
+        return ResponseEntity.ok(Collections.singletonMap("isLikes", isLikes));
+
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/createList")
     public String listCreate(Model model, ListForm listForm) {
+
         model.addAttribute("destination", "createList");
         return "list/list_form";
     }
@@ -52,6 +86,7 @@ public class ListController {
     public String detail(Model model, @PathVariable("id") Integer id, Principal principal, AnswerForm answerForm) {
         ListMain listMain = this.listService.getListMain(id);
         model.addAttribute("listMain", listMain);
+
         return "list/list_detail";
     }
 
@@ -100,4 +135,6 @@ public class ListController {
         model.addAttribute("authorList", listService.getAuthorList(id));
         return "profile/profile_form";
     }
+
+
 }

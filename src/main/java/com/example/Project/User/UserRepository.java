@@ -45,4 +45,5 @@ public interface UserRepository extends JpaRepository<SiteUser, Long> {
     )
     List<SiteUser> findAllByKeyword(@Param("kw") String kw);
 
+    SiteUser getUserByEmail(String userEmail);
 }

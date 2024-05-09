@@ -41,17 +41,8 @@
         <div class="flex h-[550px] w-full">
             <!--            게시물이미지-->
         </div>
-        <div>
-            <div class="h-[30px] w-full border-t border-gray-300">
-                <div class="flex justify-center items-center w-[30px] h-[30px]">
-                    <label class="heart-switch w-full h-full mt-[20px] ml-[20px]" id="heartSwitch">
-                        <input type="checkbox" id="toggleHeart" style="display: none;">
-                        <i class="fas fa-heart" id="heartOn" style="display: none;"></i>
-                        <i class="far fa-heart" id="heartOff"></i>
-                    </label>
-                </div>
-            </div>
-            <div class="flex flex-col ml-[20px]">
+        <div class="h-[30px] w-full border-t border-gray-300">
+            <div class="flex flex-col ml-[20px] mt-[10px]">
                 <div class="flex flex-row">
                     <img class=" w-[30px] h-[30px]" src="/logo/user.jpg" alt="" style="border-radius: 50%;">
                     <span class="overflow-auto break-words h-[150px] text-lg text-bleak font-bold w-full"
@@ -95,19 +86,5 @@
     </div>
 </div>
 </body>
-<script>
-    const toggleHeart = document.getElementById('toggleHeart');
-    const heartOn = document.getElementById('heartOn');
-    const heartOff = document.getElementById('heartOff');
 
-    toggleHeart.addEventListener('change', function() {
-        if (this.checked) {
-            heartOn.style.display = 'inline'; // on
-            heartOff.style.display = 'none'; // off
-        } else {
-            heartOn.style.display = 'none'; // off
-            heartOff.style.display = 'inline'; // on
-        }
-    });
-</script>
 </html>

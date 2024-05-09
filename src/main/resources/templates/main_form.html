@@ -26,7 +26,7 @@
 <main class="main">
     <section class="container">
         <article class="story-list">
-            <div class="story-list__item" th:each="listMain : ${listMain}">
+            <div class="story-list__item" th:each="listDTO : ${listDTOS}" th:with="listMain=${listDTO.listMain}, heart=${listDTO.heart}">
                 <div class="sl__item__header bg-purple-100">
                     <div>
                         <img src="" alt="">
@@ -36,18 +36,24 @@
                 <div class="sl__item__img">
                     <img src="" alt="">
                 </div>
-                <div class="flex w-full h-6 justify-start items-center ml-4 mb-2 mt-2"
+                <div class="flex w-[500ox] h-6 justify-start items-center ml-4 mb-2 mt-2"
                      style="position: relative;">
-                    <label class="swap flex justify-start heart-switch w-[200px]" id="heartSwitch">
-                        <input type="checkbox" id="toggleHeart">
-                        <i class="fas fa-heart" id="heartOn" style="display: none;"></i>
-                        <i class="far fa-heart" id="heartOff"></i>
+                    <label class="swap flex justify-start heart-switch w-[200px]">
+                        <input type="checkbox" id="toggleHeart" data-list-id="${listMain != null ? listMain.id : ''}">
+                        <form th:action="@{|/home/list/deleteLikes/${listMain.id}|}" id="heartOnForm" method="post">
+                            <i th:if="${heart}" class="fas fa-heart" id="heartOn"></i>
+                        </form>
+                        <form th:action="@{|/home/list/createLikes/${listMain.id}|}" id="heartOffForm" method="post">
+                            <i th:if="${!heart}" class="far fa-heart" id="heartOff"></i>
+                        </form>
+                        <div class="text-gray-400 ml-[3px]"
+                             th:text="|${#lists.size(listMain.likes)}명이 좋아합니다.|"></div>
                     </label>
                     <div role="button" class="flex w-[300px]">
                         <a class="flex flex-row" th:href="@{|/home/detail/${listMain.id}|}">
                             <i class="fa-solid fa-comment-dots flex text-lg"></i>
-                            <div class="text-gray-400"
-                                 th:text="|${#lists.size(listMain.answerList)}개의 답변이 있습니다.|"></div>
+                            <div class="text-gray-400 ml-[3px]"
+                                 th:text="|${#lists.size(listMain.answerList)}개|"></div>
                         </a>
                     </div>
                 </div>
@@ -65,19 +71,14 @@
     </section>
 </main>
 <script>
-    const toggleHeart = document.getElementById('toggleHeart');
-    const heartOn = document.getElementById('heartOn');
-    const heartOff = document.getElementById('heartOff');
-
-    toggleHeart.addEventListener('change', function() {
-        if (this.checked) {
-            heartOn.style.display = 'inline'; // on
-            heartOff.style.display = 'none'; // off
-        } else {
-            heartOn.style.display = 'none'; // off
-            heartOff.style.display = 'inline'; // on
-        }
-    });
+   const heartOff = document.getElementById('heartOff');
+   heartOff.addEventListener('click', () => {
+        document.getElementById('heartOffForm').submit();
+   });
+   const heartOn = document.getElementById('heartOn');
+   heartOn.addEventListener('click', () => {
+       document.getElementById('heartOnForm').submit();
+   });
 </script>
 </body>
 </html>

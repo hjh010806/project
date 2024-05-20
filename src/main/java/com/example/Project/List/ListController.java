@@ -45,7 +45,7 @@ public class ListController {
     public String createLikes(@PathVariable("id") int listMainId, @AuthenticationPrincipal PrincipalDetail principal) {
         SiteUser siteUser = principal.getUser();
         likesService.createLikes(listMainId, siteUser);
-        return "redirect:/home/list";
+        return "redirect:/home/list#list_%d".formatted(listMainId);
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -53,14 +53,13 @@ public class ListController {
     public String deleteLikes(@PathVariable("id") long listMainId, Principal principal) {
         SiteUser siteUser = userService.getUser(principal.getName());
         likesService.deleteLikes(listMainId, siteUser.getId());
-        return "redirect:/home/list";
+        return "redirect:/home/list#list_%d".formatted(listMainId);
     }
 
     @GetMapping("/checkLikes/{listMainId}/{siteUserId}")
     public ResponseEntity<?> checkLikes(@PathVariable("listMainId") long listMainId, @PathVariable("siteUserId") long siteUserId) {
         boolean isLikes = likesService.isLikes(listMainId, siteUserId);
         return ResponseEntity.ok(Collections.singletonMap("isLikes", isLikes));
-
     }
 
     @PreAuthorize("isAuthenticated()")

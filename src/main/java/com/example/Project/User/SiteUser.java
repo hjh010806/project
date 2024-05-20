@@ -1,6 +1,7 @@
 package com.example.Project.User;
 
 import com.example.Project.Likes.Likes;
+import com.example.Project.List.Image.Image;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,6 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -41,6 +44,10 @@ public class SiteUser {
     @OneToMany(mappedBy = "siteUser", cascade = CascadeType.ALL)
     private Set<Likes> likes;
 
+    @OneToMany(mappedBy = "siteUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images = new ArrayList<>();
+
+    private String imageUrl;
     @Builder
     public SiteUser(String name, String password,String nickName ,String email, String role, String provider, String providerId, String number) {
         this.name = name;

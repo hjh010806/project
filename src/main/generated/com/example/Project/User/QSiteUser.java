@@ -24,6 +24,10 @@ public class QSiteUser extends EntityPathBase<SiteUser> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final ListPath<com.example.Project.List.Image.Image, com.example.Project.List.Image.QImage> images = this.<com.example.Project.List.Image.Image, com.example.Project.List.Image.QImage>createList("images", com.example.Project.List.Image.Image.class, com.example.Project.List.Image.QImage.class, PathInits.DIRECT2);
+
+    public final StringPath imageUrl = createString("imageUrl");
+
     public final SetPath<com.example.Project.Likes.Likes, com.example.Project.Likes.QLikes> likes = this.<com.example.Project.Likes.Likes, com.example.Project.Likes.QLikes>createSet("likes", com.example.Project.Likes.Likes.class, com.example.Project.Likes.QLikes.class, PathInits.DIRECT2);
 
     public final StringPath name = createString("name");

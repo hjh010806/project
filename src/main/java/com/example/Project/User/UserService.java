@@ -96,7 +96,15 @@ public class UserService {
         if (siteUser.isPresent())
             return siteUser.get();
         else
-            throw new DataNotFoundException("siteuser not found");
+            throw new DataNotFoundException("siteUser not found");    }
+
+    public SiteUser getNickname(String nickname) {
+        Optional<SiteUser> siteUser = this.userRepository.findByNickName(nickname);
+        if (siteUser.isPresent()) {
+            return siteUser.get();
+        }
+        else
+            throw new DataNotFoundException("siteUser not found");
     }
     public SiteUser getUserId(Long id) {
         Optional<SiteUser> siteUser = this.userRepository.findById(id);
@@ -109,6 +117,24 @@ public class UserService {
 
     public List<SiteUser> searchByKeyword(String kw) {
         return this.userRepository.findAllByKeyword(kw);
+    }
+
+    public void setUrl(SiteUser user, String temp_url) {
+        user.setImageUrl(temp_url);
+        userRepository.save(user);
+    }
+
+    public void getImageUrl(SiteUser user, String tempUrl) {
+        user.getImageUrl();
+    }
+
+    public String getUserByEmail(String email) {
+        Optional<SiteUser> siteUser = this.userRepository.findByEmail(email);
+        return siteUser.get().getImageUrl();
+    }
+
+    public void deleteUrl(SiteUser siteUser) {
+        siteUser.setImageUrl("");
     }
 
 }

@@ -14,4 +14,5 @@ import lombok.Setter;
 public class ListDTO {
     private ListMain listMain;
     private boolean heart;
+    private String listUrl;
 }

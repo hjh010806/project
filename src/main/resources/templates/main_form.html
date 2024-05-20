@@ -31,7 +31,7 @@
                     <div>
                         <img src="" alt="">
                     </div>
-                    <div th:if="${listMain.author != null}" th:text="${listMain.author.nickName}"></div>
+                    <div th:if="${listMain.author != null}" th:text="${listMain.author.nickName}" th:id="|list_${listMain.id}"></div>
                 </div>
                 <div class="sl__item__img">
                     <img src="" alt="">
@@ -40,11 +40,11 @@
                      style="position: relative;">
                     <label class="swap flex justify-start heart-switch w-[200px]">
                         <input type="checkbox" id="toggleHeart" data-list-id="${listMain != null ? listMain.id : ''}">
-                        <form th:action="@{|/home/list/deleteLikes/${listMain.id}|}" id="heartOnForm" method="post">
-                            <i th:if="${heart}" class="fas fa-heart" id="heartOn"></i>
+                        <form th:action="@{|/home/list/deleteLikes/${listMain.id}|}" name="heartOnForm" method="post">
+                            <i th:if="${heart}" class="fas fa-heart" name="heartOn"></i>
                         </form>
-                        <form th:action="@{|/home/list/createLikes/${listMain.id}|}" id="heartOffForm" method="post">
-                            <i th:if="${!heart}" class="far fa-heart" id="heartOff"></i>
+                        <form th:action="@{|/home/list/createLikes/${listMain.id}|}" name="heartOffForm" method="post">
+                            <i th:if="${!heart}" class="far fa-heart" name="heartOff"></i>
                         </form>
                         <div class="text-gray-400 ml-[3px]"
                              th:text="|${#lists.size(listMain.likes)}명이 좋아합니다.|"></div>
@@ -71,14 +71,14 @@
     </section>
 </main>
 <script>
-   const heartOff = document.getElementById('heartOff');
-   heartOff.addEventListener('click', () => {
-        document.getElementById('heartOffForm').submit();
-   });
-   const heartOn = document.getElementById('heartOn');
-   heartOn.addEventListener('click', () => {
-       document.getElementById('heartOnForm').submit();
-   });
+   const heartOff = document.getElementsByName('heartOff');
+   Array.from( heartOff).forEach(e=> e.addEventListener('click', () => {
+        e.parentNode.submit();
+   }));
+   const heartOn = document.getElementsByName('heartOn');
+   Array.from( heartOn).forEach(e=> e.addEventListener('click', () => {
+       e.parentNode.submit();
+   }));
 </script>
 </body>
 </html>

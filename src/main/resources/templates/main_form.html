@@ -34,7 +34,7 @@
                     <div th:if="${listMain.author != null}" th:text="${listMain.author.nickName}" th:id="|list_${listMain.id}"></div>
                 </div>
                 <div class="sl__item__img">
-                    <img src="" alt="">
+                    <img th:src="${listMain.listUrl}" alt="">
                 </div>
                 <div class="flex w-[500ox] h-6 justify-start items-center ml-4 mb-2 mt-2"
                      style="position: relative;">

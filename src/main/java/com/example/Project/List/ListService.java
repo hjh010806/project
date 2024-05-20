@@ -3,6 +3,7 @@ package com.example.Project.List;
 import com.example.Project.Main.DataNotFoundException;
 import com.example.Project.User.SiteUser;
 import com.example.Project.User.UserRepository;
+import com.example.Project.User.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,11 +21,11 @@ import java.util.Optional;
 @Service
 public class ListService {
     private final ListRepository listRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
 
     public List<ListMain> getList() {
-        return this.listRepository.findAll();
+        return this.listRepository.findAllOrderByCreateDateDESC();
     }
     //리스트 생성
     public void create(String content, SiteUser user) {
@@ -32,6 +33,8 @@ public class ListService {
         listMain.setContent(content);
         listMain.setCreateDate(LocalDateTime.now());
         listMain.setAuthor(user);
+        listMain.setListUrl(user.getImageUrl());
+        userService.deleteUrl(user);
         this.listRepository.save(listMain);
     }
 

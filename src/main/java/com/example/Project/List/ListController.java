@@ -35,7 +35,7 @@ public class ListController {
         SiteUser user = principalDetail != null ? principalDetail.getUser() : null;
         List<ListDTO> listDTOS = new ArrayList<>();
         for (ListMain listMain : mainList)
-            listDTOS.add(ListDTO.builder().listMain(listMain).heart(user != null ? likesService.isLikes(listMain.getId(), user.getId()) : false).build());
+            listDTOS.add(ListDTO.builder().listMain(listMain).heart(user != null ? likesService.isLikes(listMain.getId(), user.getId()) : false).listUrl(listMain.getListUrl()).build());
         model.addAttribute("listDTOS", listDTOS);
         return "main_form";
     }

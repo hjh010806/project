@@ -2,6 +2,7 @@ package com.example.Project.List;
 
 import com.example.Project.Answer.Answer;
 import com.example.Project.Likes.Likes;
+import com.example.Project.List.Image.Image;
 import com.example.Project.User.SiteUser;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -35,6 +37,12 @@ public class ListMain {
 
     @OneToMany(mappedBy = "listMain", cascade = CascadeType.ALL)
     private Set<Likes> likes;
+
+//    @OneToMany(mappedBy = "listMain", cascade = CascadeType.REMOVE)
+//    private List<Image> ImageUrl = new ArrayList<>();
+
+    private String listUrl;
+
 
     @Builder
     public ListMain(String content) {

@@ -10,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-import static com.example.Project.User.QSiteUser.siteUser;
 
 public interface UserRepository extends JpaRepository<SiteUser, Long> {
 //    SiteUser findByEmail(String email);
@@ -30,7 +29,7 @@ public interface UserRepository extends JpaRepository<SiteUser, Long> {
         "  email = :email ")
     List<SiteUser> checklist(String number, String nickName, String email);
 
-    Optional<ListMain> findByNickName(String nickName);
+    Optional<SiteUser> findByNickName(String nickName);
 
     Optional<SiteUser> findByPassword(String password);
 

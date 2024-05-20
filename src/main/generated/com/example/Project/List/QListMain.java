@@ -34,6 +34,8 @@ public class QListMain extends EntityPathBase<ListMain> {
 
     public final SetPath<com.example.Project.Likes.Likes, com.example.Project.Likes.QLikes> likes = this.<com.example.Project.Likes.Likes, com.example.Project.Likes.QLikes>createSet("likes", com.example.Project.Likes.Likes.class, com.example.Project.Likes.QLikes.class, PathInits.DIRECT2);
 
+    public final StringPath listUrl = createString("listUrl");
+
     public QListMain(String variable) {
         this(ListMain.class, forVariable(variable), INITS);
     }

@@ -1,14 +1,11 @@
 package com.example.Project.List.Image;
 
-import com.example.Project.List.ListMain;
 import com.example.Project.User.SiteUser;
 import com.example.Project.User.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;

@@ -50,7 +50,7 @@ public class ListService {
         this.listRepository.delete(listMain);
     }
 
-    public List<ListMain> getAuthorList(Integer id) {
+    public List<ListMain> getAuthorList(Long id) {
         return listRepository.findByAuthorId(id);
     }
 

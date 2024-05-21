@@ -1,13 +1,14 @@
 package com.example.Project.User;
 
-import com.example.Project.List.ListMain;
 import com.example.Project.List.ListRepository;
 import com.example.Project.Main.DataNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +18,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ListRepository listRepository;
-
+    @Value("${image.upload.dir}")
+    private String uploadDir;
     public boolean hasUser(String number, String nickName, String email) {
         return userRepository.checklist(number, nickName, email).size() > 1;
     }
@@ -134,7 +136,17 @@ public class UserService {
     }
 
     public void deleteUrl(SiteUser siteUser) {
-        siteUser.setImageUrl("");
+        siteUser.setImageUrl(null);
+        userRepository.save(siteUser);
     }
+    public void deleteUrlFile (SiteUser siteUser) {
+        File file = new File(uploadDir+siteUser.getImageUrl());
+        if(file.exists()) {
+            file.delete();
+            siteUser.setImageUrl(null);
+        }
+        userRepository.save(siteUser);
+    }
+
 
 }

@@ -64,16 +64,23 @@
     </div>
 </div>
 <div class="flex justify-center">
-    <div class="flex justify-between w-3/6" style="border-top: 1px solid #ccc;">
-        <div class="border border-gray-300 w-[250px] h-[250px] mt-[20px]">
-
+    <div class="flex justify-start w-3/6 flex-wrap mb-[200px]" style="border-top: 1px solid #ccc;">
+        <div th:each="list : ${listMain}" class="flex justify-start border border-gray-300 w-[250px] h-[250px] mt-[20px] ml-[50px]">
+            <a th:href="@{|/home/detail/${list.id}|}" class="w-full h-full">
+                <img th:src="${list.listUrl}" class="w-full h-full">
+            </a>
         </div>
-        <div class="border border-gray-300 w-[250px] h-[250px] mt-[20px]">
+<!--<div class="flex justify-center">-->
+<!--    <div class="flex justify-between w-3/6" style="border-top: 1px solid #ccc;">-->
+<!--        <div class="border border-gray-300 w-[250px] h-[250px] mt-[20px]">-->
 
-        </div>
-        <div class="border border-gray-300 w-[250px] h-[250px] mt-[20px]">
+<!--        </div>-->
+<!--        <div class="border border-gray-300 w-[250px] h-[250px] mt-[20px]">-->
 
-        </div>
+<!--        </div>-->
+<!--        <div class="border border-gray-300 w-[250px] h-[250px] mt-[20px]">-->
+
+<!--        </div>-->
     </div>
 </div>
 </body>

@@ -2,12 +2,14 @@ package com.example.Project.List.Image;
 
 import com.example.Project.User.SiteUser;
 import com.example.Project.User.UserService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,20 +42,22 @@ public class ImageController {
     }
 
     @PostMapping("/image/temp")
-    public String tempUpload(ImageDto imageDto,Model model, @AuthenticationPrincipal UserDetails userDetails, RedirectAttributes redirectAttributes) {
-        if (userDetails == null) {
+    public String tempUpload(ImageDto imageDto, Model model, @AuthenticationPrincipal UserDetails userDetails, RedirectAttributes redirectAttributes, @RequestParam(value = "temp_text") String text, @RequestParam(value="destination") String destination) {        if (userDetails == null) {
             // 사용자 정보가 없는 경우 처리
             return "login/login_form"; // 로그인 페이지로 리디렉션
         }
         // 이미지를 업로드합니다.
-        String temp =  imageService.tempUpload(imageDto, userDetails.getUsername());
+        String temp = imageService.tempUpload(imageDto, userDetails.getUsername());
         // 사용자 이름을 기반으로 리다이렉트합니다.
-        redirectAttributes.addFlashAttribute("temp",temp);
-        return "redirect:/home/createList";
+        redirectAttributes.addFlashAttribute("temp", temp);
+
+        redirectAttributes.addFlashAttribute("text", text);
+        return "redirect:/home/"+destination;
     }
 
     @Value("${image.upload.dir}")
     private String uploadDir;
+
     @GetMapping("/{filename}")
     public ResponseEntity<byte[]> getImage(@PathVariable String filename) {
         try {
@@ -65,5 +69,13 @@ public class ImageController {
             e.printStackTrace();
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/image/delete")
+    public String imageDelete(@AuthenticationPrincipal UserDetails userDetails) {
+        SiteUser user = userService.getUser(userDetails.getUsername());
+        userService.deleteUrlFile(user);
+
+        return "redirect:/user/profile";
     }
 }

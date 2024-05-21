@@ -10,6 +10,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Files;
@@ -51,15 +52,20 @@ public class ImageService {
     @Transactional
     public String tempUpload(ImageDto imageDto, String username) {
         try {
+            SiteUser siteUser = userService.getUser(username);
+            File file = new File(uploadDir+siteUser.getImageUrl());
+            if(file.exists())
+                file.delete();
+
             UUID uuid = UUID.randomUUID();
             String imageFileName = "/" + username + "_" + uuid + imageDto.getFile().getOriginalFilename();
-            String uploadFolder = uploadDir;
-            Path imageFilePath = Paths.get(uploadFolder+imageFileName);
+
+            Path imageFilePath = Paths.get(uploadDir+imageFileName);
 
             // 파일을 저장합니다.
             Files.write(imageFilePath, imageDto.getFile().getBytes());
 
-            SiteUser siteUser = userService.getUser(username);
+
             userService.setUrl(siteUser,imageFileName);
             // 사용자 이름을 기반으로 사용자 객체를 가져옵니다.
             return userService.getUserByEmail(username);

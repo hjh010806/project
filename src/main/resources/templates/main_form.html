@@ -44,9 +44,9 @@
                      style="position: relative;">
                     <label class="swap flex justify-start heart-switch w-[200px]">
                         <input type="checkbox" id="toggleHeart" data-list-id="${listMain != null ? listMain.id : ''}">
-                        <.form th:action="@{|/home/list/deleteLikes/${listMain.id}|}" name="heartOnForm" method="post">
+                        <form th:action="@{|/home/list/deleteLikes/${listMain.id}|}" name="heartOnForm" method="post">
                             <i th:if="${heart}" class="fas fa-heart" name="heartOn"></i>
-                        </.form>
+                        </form>
                         <form th:action="@{|/home/list/createLikes/${listMain.id}|}" name="heartOffForm" method="post">
                             <i th:if="${!heart}" class="far fa-heart" name="heartOff"></i>
                         </form>

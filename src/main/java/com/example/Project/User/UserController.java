@@ -1,6 +1,5 @@
 package com.example.Project.User;
 
-import com.example.Project.List.ListMain;
 import com.example.Project.List.ListService;
 import com.example.Project.SocialLogin.PrincipalDetail;
 import com.example.Project.SocialLogin.PrincipalDetailsService;
@@ -9,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;

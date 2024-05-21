@@ -24,27 +24,32 @@
 <div class="flex w-full h-[800px] mt-[50px] mr-[30px] ml-[30px] justify-center">
     <div class="flex flex-col w-[1000px] border border-gray-300">
         <div class="flex flex-row h-[50px] w-full bg-purple-100">
-            <div class="flex w-[50px] h-[50px]">
-                <img src="/logo/user.jpg" alt="" style="border-radius: 50%;">
-                <div class="content-end" th:if="${listMain.author != null}" th:text="${listMain.author.nickName}"></div>
+            <div class="flex w-[100px] h-[50px]">
+                <a th:href="@{|/user/profile/${listMain.author.id}|}" class="flex w-[50px] h-full">
+                    <img src="/logo/user.jpg" style="border-radius: 50%;" class="flex w-full h-full">
+                </a>
+                <div class="content-end" th:if="${listMain.author != null}"
+                     th:text="${listMain.author.nickName}"></div>
             </div>
             <div class="flex w-full justify-end dropdown dropdown-bottom" sec:authorize="isAuthenticated()"
                  th:if="${listMain.author != null and #authentication.getPrincipal().getEmail() == listMain.author.email}">
                 <i tabindex="0" role="button"
                    class="fa-solid fa-bars btn bg-purple-100 border border-purple-100 flex justify-center items-center w-[50px] h-[50px]"></i>
-                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow rounded-box w-[100px]">
+                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow rounded-box w-[100px] bg-white">
                     <li><a th:href="@{|/home/modify/${id}|}" method="post">수정</a></li>
                     <li><a th:href="@{|/home/delete/${id}|}">삭제</a></li>
                 </ul>
             </div>
         </div>
         <div class="flex h-[550px] w-full">
-            <img th:src="${listMain.listUrl}" alt="">
+            <img th:src="${listMain.listUrl}" class="w-full">
         </div>
         <div class="h-[30px] w-full border-t border-gray-300">
             <div class="flex flex-col ml-[20px] mt-[10px]">
                 <div class="flex flex-row">
-                    <img class=" w-[30px] h-[30px]" src="/logo/user.jpg" alt="" style="border-radius: 50%;">
+                    <a th:href="@{|/user/profile/${listMain.author.id}|}">
+                        <img class=" w-[30px] h-[30px]" src="/logo/user.jpg" alt="" style="border-radius: 50%;">
+                    </a>
                     <span class="overflow-auto break-words h-[150px] text-lg text-bleak font-bold w-full"
                           th:text="${listMain.author.nickName} + ' : ' + ${listMain.content}"></span>
                 </div>
@@ -57,7 +62,9 @@
         <div class="flex overflow-auto w-full h-[750px] flex-col">
             <div class="flex flex-col break-words" th:each="answer : ${listMain.answerList}">
                 <div class="flex flex-row">
-                    <img class="w-[30px] h-[30px]" src="/logo/user.jpg" alt="" style="border-radius: 50%;">
+                    <a th:href="@{|/user/profile/${answer.author.id}|}">
+                        <img class="w-[30px] h-[30px]" src="/logo/user.jpg" alt="" style="border-radius: 50%;">
+                    </a>
                     <span class="text-lg text-gray-800 font-bold"
                           th:text="${answer.author.nickName + ' : ' + answer.content}"></span>
                 </div>

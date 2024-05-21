@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -64,9 +65,13 @@ public class ListController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/createList")
-    public String listCreate(Model model, ListForm listForm) {
-
+    public String listCreate(Model model, ListForm listForm, @AuthenticationPrincipal UserDetails userDetails) {
         model.addAttribute("destination", "createList");
+//        SiteUser user = userService.getUser(userDetails.getUsername());
+//        String temp = user.getImageUrl();
+//        model.addAttribute("temp", temp);
+        if(model.containsAttribute("text"))
+            listForm.setContent((String)model.getAttribute("text"));
         return "list/list_form";
     }
 
@@ -98,7 +103,15 @@ public class ListController {
         ListMain listMain = this.listService.getListMain(id);
         if (!listMain.getAuthor().getEmail().equals(principal.getName()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
-
+        // 리스트
+        SiteUser user = userService.getUser(listMain.getAuthor().getEmail());
+        if (user.getImageUrl() != null) {
+            String temp = user.getImageUrl();
+            model.addAttribute("temp", temp);
+        }else {
+            String temp = listMain.getListUrl();
+            model.addAttribute("temp", temp);
+        }
         model.addAttribute("destination", "modify/" + id.toString());
         listForm.setContent(listMain.getContent());
         return "list/list_form";
@@ -106,7 +119,8 @@ public class ListController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
-    public String modifyList(@Valid ListForm listForm, BindingResult bindingResult, Principal principal, @PathVariable("id") Integer id) {
+    public String modifyList(@Valid ListForm listForm, Model model, BindingResult bindingResult,
+                             Principal principal, @PathVariable("id") Integer id) {
         if (bindingResult.hasErrors())
             return "list/list_form";
 
@@ -130,8 +144,16 @@ public class ListController {
     }
 
     @GetMapping("/list/{id}")
-    public String userList(Model model, @PathVariable("id") Integer id) {
+    public String userList(Model model, @PathVariable("id") Long id) {
         model.addAttribute("authorList", listService.getAuthorList(id));
+        return "profile/profile_form";
+    }
+
+    @GetMapping("/myList")
+    public String getMyList(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        String userEmail = userDetails.getUsername();
+        SiteUser siteUser = userService.getUser(userEmail);
+        model.addAttribute("myList", listService.getAuthorList(siteUser.getId()));
         return "profile/profile_form";
     }
 }

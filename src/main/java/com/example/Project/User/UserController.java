@@ -1,5 +1,7 @@
 package com.example.Project.User;
 
+import com.example.Project.List.ListMain;
+import com.example.Project.List.ListService;
 import com.example.Project.SocialLogin.PrincipalDetail;
 import com.example.Project.SocialLogin.PrincipalDetailsService;
 import jakarta.validation.Valid;
@@ -7,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,6 +24,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
     private final PrincipalDetailsService principalDetailsService;
+    private final ListService listService;
 
     @GetMapping("/signup")
     public String signup(UserCreateForm userCreateForm) {
@@ -68,6 +72,7 @@ public class UserController {
             SiteUser siteUser = principalDetail.getUser();
             if (siteUser != null) {
                 model.addAttribute("siteUser", siteUser);
+                model.addAttribute("listMain", listService.getAuthorList(siteUser.getId()));
             }
         }
         return "profile/profile_form";
@@ -79,6 +84,7 @@ public class UserController {
         SiteUser profileUser = this.userService.getUserId(id);
             if (profileUser != null) {
                 model.addAttribute("profileUser", profileUser);
+                model.addAttribute("listMain", listService.getAuthorList(id));
             }
         return "profile/profile_user_form";
     }
@@ -140,5 +146,7 @@ public class UserController {
         model.addAttribute("userProfile", searchResults);
         return "list/search_list";
     }
+
+
 
 }

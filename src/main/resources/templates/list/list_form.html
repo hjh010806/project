@@ -21,13 +21,18 @@
 </div>
 <body>
 <div>
-    <form id="image_form" th:action="@{/image/temp}" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+    <form id="image_form" th:action="@{/image/temp}" method="post" enctype="multipart/form-data"
+          onsubmit="return validateForm()">
+        <input type="hidden" id="temp_text" name="temp_text"/>
+        <!--   수정과 생성의 Url 변환    -->
+        <input type="hidden" name="destination" th:value="${destination}"/>
         <div class="flex justify-center items-center mt-10">
             <div class="flex justify-end w-3/6 items-center h-[50px]"
                  style="border: 1px solid #ccc; border-radius: 10px;">
                 <div class="flex items-center justify-center mr-96 text-xl font-bold">게시물</div>
-                <input type="file" id="file-upload" name="file" class="file-input w-full max-w-xs h-10" style="display: none;">
-<!--                <input type="hidden" name="temp" th:value="${temp}">-->
+                <input type="file" id="file-upload" name="file" class="file-input w-full max-w-xs h-10"
+                       style="display: none;">
+                <!--                <input type="hidden" name="temp" th:value="${temp}">-->
                 <button type="submit" onclick="openFileUpload()" class="flex items-center justify-start mr-4">
                     <i class="fa-solid fa-image"></i>
                     <span class="ml-2">사진</span>
@@ -35,27 +40,35 @@
             </div>
         </div>
         <div id="parent" class="flex justify-center items-center mt-2" style="height: auto;">
-            <div id="child" class="flex justify-center items-center border border-gray-300 rounded-lg">
-                <img class="flex w-full h-[500px]" id="temp" th:src="${temp}">
+            <div id="child" class="flex justify-center w-3/6 h-[500px] items-center border border-gray-300 rounded-lg">
+                <img class="flex w-full h-[500px]" id="temp" th:src="${temp}" th:if="${temp != null}">
+                <i class="flex fa-solid fa-image w-[200px] h-[200px] justify-center items-center flex-col"
+                   th:if="${temp == null}">사진 없음</i>
+                <!--                <img class="flex w-full h-[500px]" id="DefaultTemp" th:src="${DefaultTemp}">-->
             </div>
         </div>
-        <div id="errorMessage" class="error-message text-red-500 flex"></div>
     </form>
     <form th:action="@{|/home/${destination}|}" method="post">
         <div class="flex justify-center items-center mt-2">
             <div class="flex justify-center items-center w-3/6 h-[200px] border border-gray-300 rounded-lg">
-                <textarea th:field="${listForm.content}" class="w-full h-full" placeholder="빈 상자일 때 내용을 입력하세요." style="resize: vertical;"></textarea>
+                <textarea id="text" th:field="${listForm.content}" class="w-full h-full"
+                          placeholder="빈 상자일 때 내용을 입력하세요."
+                          style="resize: vertical;"></textarea>
             </div>
         </div>
         <div class="flex justify-center items-center">
-            <div class="flex justify-end items-end mt-2 w-3/6">
+            <div id="errorMessage" class="error-message text-red-500 flex"></div>
+            <div class="flex justify-end items-end mt-2 w-3/6 gap-3">
+                <a th:href="@{/image/delete}">
+                    <button class="btn btn-outline btn-primary" type="button">등록 취소</button>
+                </a>
                 <button class="btn btn-outline btn-primary" type="submit">게시글 등록</button>
             </div>
         </div>
     </form>
 </div>
 </body>
-<script>
+<script th:inline="javascript">
     function openFileUpload() {
         // 파일 업로드 창 열기
         document.getElementById('file-upload').click();
@@ -63,6 +76,8 @@
 
     document.getElementById('file-upload').addEventListener('change', function(){
             const image_form = document.getElementById('image_form');
+            document.getElementById('temp_text').value = document.getElementById('text').value;
+            //alert([[${destination}]]);
             image_form.submit();
     });
     const listImages = document.getElementById('listImages');

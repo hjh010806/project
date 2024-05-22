@@ -26,6 +26,8 @@ public class QImage extends EntityPathBase<Image> {
 
     public final StringPath imageUrl = createString("imageUrl");
 
+    public final StringPath profileUrl = createString("profileUrl");
+
     public final com.example.Project.User.QSiteUser siteUser;
 
     public QImage(String variable) {

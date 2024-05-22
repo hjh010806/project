@@ -18,6 +18,8 @@ public class Image {
 
     private String imageUrl;
 
+    private String profileUrl;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private SiteUser siteUser;
 
@@ -26,4 +28,5 @@ public class Image {
         this.imageUrl = imageUrl;
         this.siteUser = siteUser;
     }
+
 }

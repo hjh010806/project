@@ -1,5 +1,6 @@
 package com.example.Project.User;
 
+import com.example.Project.Keys;
 import com.example.Project.List.ListRepository;
 import com.example.Project.Main.DataNotFoundException;
 import jakarta.transaction.Transactional;
@@ -18,8 +19,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ListRepository listRepository;
-    @Value("${image.upload.dir}")
-    private String uploadDir;
+
     public boolean hasUser(String number, String nickName, String email) {
         return userRepository.checklist(number, nickName, email).size() > 1;
     }
@@ -126,13 +126,19 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void getImageUrl(SiteUser user, String tempUrl) {
-        user.getImageUrl();
+    public void setProfileUrl(SiteUser user, String url) {
+        user.setProfileUrl(url);
+        userRepository.save(user);
     }
 
-    public String getUserByEmail(String email) {
+    public String getUserByEmailUrl(String email) {
         Optional<SiteUser> siteUser = this.userRepository.findByEmail(email);
         return siteUser.get().getImageUrl();
+    }
+
+    public String getUserByEMailProfileUrl(String email) {
+        Optional<SiteUser> siteUser = this.userRepository.findByEmail(email);
+        return siteUser.get().getProfileUrl();
     }
 
     public void deleteUrl(SiteUser siteUser) {
@@ -140,13 +146,19 @@ public class UserService {
         userRepository.save(siteUser);
     }
     public void deleteUrlFile (SiteUser siteUser) {
-        File file = new File(uploadDir+siteUser.getImageUrl());
+
+        File file = new File(Keys.uploadDir.getLocation()+siteUser.getImageUrl());
+//        getImageUrl = "/list/..."
         if(file.exists()) {
             file.delete();
             siteUser.setImageUrl(null);
         }
         userRepository.save(siteUser);
     }
+
+//    public String getProfileUrl(SiteUser siteUser) {
+//        return profileUploadDir + siteUser.getProfileUrl();
+//    }
 
 
 }

@@ -21,10 +21,15 @@
     <nav th:replace="~{./navbar/navbar :: navbarFragment}"></nav>
 </div>
 <header class="flex justify-center items-center mt-10">
-    <div style="margin-right: 50px;">
+    <div style="margin-right: 50px;" class="flex justify-center flex-col items-center gap-3">
         <img class="mask mask-circle w-48 h-48"
-             src="/logo/user.jpg"/>
-        <input type="file" class="file-input w-full max-w-xs h-10">
+             th:src="${temp_profile != null ? temp_profile : '/Default/User.jpg'}" id="temp_profile"/>
+<!--        <img class="mask mask-circle w-48 h-48"-->
+<!--             th:src="/logo/user.jpg" th:if="${temp_profile == null}"/>-->
+        <form th:action="@{/profileImage/temp}" class="flex items-center flex-col gap-3" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" class="file-input w-2/3 max-w-xs h-8 border border-gray-400">
+            <button class="btn btn-outline btn-primary w-2/3" type="submit">이미지 저장</button>
+        </form>
     </div>
     <div class="inline-flex">
         <form th:action="@{/user/update}" method="post">
@@ -105,7 +110,8 @@
 <!-- 해당 유저의 게시물 이미지 등록후 구현 -->
 <div class="flex justify-center">
     <div class="flex justify-start w-3/6 flex-wrap mb-[200px]" style="border-top: 1px solid #ccc;">
-        <div th:each="list : ${listMain}" class="flex justify-start border border-gray-300 w-[250px] h-[250px] mt-[20px] ml-[50px]">
+        <div th:each="list : ${listMain}"
+             class="flex justify-start border border-gray-300 w-[250px] h-[250px] mt-[20px] ml-[50px]">
             <a th:href="@{|/home/detail/${list.id}|}" class="w-full h-full">
                 <img th:src="${list.listUrl}" class="w-full h-full">
             </a>

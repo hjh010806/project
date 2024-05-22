@@ -22,6 +22,8 @@ import org.springframework.web.server.ResponseStatusException;
 import java.security.Principal;
 import java.util.*;
 
+import static com.example.Project.User.QSiteUser.siteUser;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/home")
@@ -33,7 +35,11 @@ public class ListController {
     @GetMapping("/list")
     public String list(Model model, @AuthenticationPrincipal PrincipalDetail principalDetail) {
         List<ListMain> mainList = this.listService.getList();
-        SiteUser user = principalDetail != null ? principalDetail.getUser() : null;
+        SiteUser user = principalDetail != null ? userService.getUser(principalDetail.getUsername()) : null;
+        if (principalDetail != null) {
+            SiteUser siteUser = userService.getUser(principalDetail.getEmail());
+            model.addAttribute("siteUser", siteUser);
+        }
         List<ListDTO> listDTOS = new ArrayList<>();
         for (ListMain listMain : mainList)
             listDTOS.add(ListDTO.builder().listMain(listMain).heart(user != null ? likesService.isLikes(listMain.getId(), user.getId()) : false).listUrl(listMain.getListUrl()).build());
@@ -44,7 +50,7 @@ public class ListController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/list/createLikes/{id}")
     public String createLikes(@PathVariable("id") int listMainId, @AuthenticationPrincipal PrincipalDetail principal) {
-        SiteUser siteUser = principal.getUser();
+        SiteUser siteUser = userService.getUser(principal.getUsername());
         likesService.createLikes(listMainId, siteUser);
         return "redirect:/home/list#list_%d".formatted(listMainId);
     }
@@ -67,11 +73,13 @@ public class ListController {
     @GetMapping("/createList")
     public String listCreate(Model model, ListForm listForm, @AuthenticationPrincipal UserDetails userDetails) {
         model.addAttribute("destination", "createList");
+        // 기능을 구현하다 수정진행중 데이터유지가 필요없을거같아 지웠지만 혹시몰라 주석처리함.
 //        SiteUser user = userService.getUser(userDetails.getUsername());
 //        String temp = user.getImageUrl();
 //        model.addAttribute("temp", temp);
-        if(model.containsAttribute("text"))
-            listForm.setContent((String)model.getAttribute("text"));
+        if (model.containsAttribute("text"))
+            listForm.setContent((String) model.getAttribute("text"));
+        model.addAttribute("siteUser", userService.getUser(userDetails.getUsername()));
         return "list/list_form";
     }
 
@@ -87,9 +95,13 @@ public class ListController {
     }
 
     @GetMapping("/detail/{id}")
-    public String detail(Model model, @PathVariable("id") Integer id, Principal principal, AnswerForm answerForm) {
+    public String detail(Model model, @PathVariable("id") Integer id, PrincipalDetail principalDetail, Principal principal, AnswerForm answerForm) {
         ListMain listMain = this.listService.getListMain(id);
         model.addAttribute("listMain", listMain);
+        if(principal != null) {
+            SiteUser user = userService.getUser(principal.getName());
+            model.addAttribute("siteUser", user);
+        }
 
         return "list/list_detail";
     }
@@ -105,10 +117,12 @@ public class ListController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         // 리스트
         SiteUser user = userService.getUser(listMain.getAuthor().getEmail());
+        model.addAttribute("siteUser", user);
+
         if (user.getImageUrl() != null) {
             String temp = user.getImageUrl();
             model.addAttribute("temp", temp);
-        }else {
+        } else {
             String temp = listMain.getListUrl();
             model.addAttribute("temp", temp);
         }

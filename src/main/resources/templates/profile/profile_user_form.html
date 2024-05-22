@@ -23,7 +23,7 @@
 <header class="flex justify-center items-center mt-10">
     <div style="margin-right: 50px;">
         <img class="mask mask-circle w-48 h-48"
-             src="/logo/user.jpg"/>
+             th:src="${profileUser.profileUrl != null ? profileUser.profileUrl : '/Default/User.jpg'}"/>
     </div>
     <div class="inline-flex">
         <div style="margin-left: 40px;">
@@ -70,17 +70,6 @@
                 <img th:src="${list.listUrl}" class="w-full h-full">
             </a>
         </div>
-<!--<div class="flex justify-center">-->
-<!--    <div class="flex justify-between w-3/6" style="border-top: 1px solid #ccc;">-->
-<!--        <div class="border border-gray-300 w-[250px] h-[250px] mt-[20px]">-->
-
-<!--        </div>-->
-<!--        <div class="border border-gray-300 w-[250px] h-[250px] mt-[20px]">-->
-
-<!--        </div>-->
-<!--        <div class="border border-gray-300 w-[250px] h-[250px] mt-[20px]">-->
-
-<!--        </div>-->
     </div>
 </div>
 </body>

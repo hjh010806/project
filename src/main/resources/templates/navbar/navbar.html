@@ -18,7 +18,8 @@
             <div class="dropdown dropdown-end" style="position: absolute; right: 30px;">
                 <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
                     <div class="w-10 rounded-full">
-                        <img alt="프로필 이미지" th:src="@{${profileImages}}"/>
+                        <img alt="프로필 이미지" src="/logo/user.jpg" sec:authorize="isAnonymous()"/>
+                        <img alt="프로필 이미지" th:src="${siteUser.profileUrl != null ? siteUser.profileUrl : '/Default/User.jpg'}" sec:authorize="isAuthenticated()"/>
                     </div>
                 </div>
                 <ul tabindex="0"

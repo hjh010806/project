@@ -48,6 +48,8 @@ public class SiteUser {
     private List<Image> images = new ArrayList<>();
 
     private String imageUrl;
+
+    private String profileUrl;
     @Builder
     public SiteUser(String name, String password,String nickName ,String email, String role, String provider, String providerId, String number) {
         this.name = name;

@@ -1,7 +1,9 @@
 package com.example.Project.SocialLogin;
 
 import com.example.Project.User.SiteUser;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
+@NoArgsConstructor
 public class PrincipalDetail implements UserDetails, OAuth2User{
     @Setter
     private SiteUser siteUser;
@@ -87,5 +90,7 @@ public class PrincipalDetail implements UserDetails, OAuth2User{
     public SiteUser getUser(){
         return siteUser;
     }
-
+    public Long getId(){
+        return siteUser.getId();
+    }
 }

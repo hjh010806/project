@@ -18,9 +18,10 @@ public class ImageDto {
         this.file = file;
     }
 
-    public Image toEntity(String imageUrl, SiteUser siteUser) {
+    public Image toEntity(String imageUrl, String profileUrl , SiteUser siteUser) {
         return Image.builder()
                 .imageUrl(imageUrl)
+                .profileUrl(profileUrl)
                 .siteUser(siteUser)
                 .build();
     }

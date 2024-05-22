@@ -1,5 +1,6 @@
 package com.example.Project.List;
 
+import com.example.Project.Keys;
 import com.example.Project.List.Image.ImageDto;
 import com.example.Project.List.Image.ImageService;
 import com.example.Project.Main.DataNotFoundException;
@@ -28,8 +29,6 @@ public class ListService {
     private final ListRepository listRepository;
     private final UserService userService;
     private final ImageService imageService;
-    @Value("${image.upload.dir}")
-    private String uploadDir;
 
 
     public List<ListMain> getList() {
@@ -56,16 +55,18 @@ public class ListService {
 
     public void modify(ListMain listMain, String content) {
         SiteUser user = userService.getUser(listMain.getAuthor().getEmail());
-        deleteListUrl(listMain);
+        if(user.getImageUrl() != null){
+            deleteListUrl(listMain);
+            listMain.setListUrl(user.getImageUrl());
+            userService.deleteUrl(user);
+        }
         listMain.setContent(content);
         listMain.setCreateDate(LocalDateTime.now());
-        listMain.setListUrl(user.getImageUrl());
-        userService.deleteUrl(user);
         this.listRepository.save(listMain);
     }
 
     public void deleteListUrl(ListMain listMain) {
-        File file = new File(uploadDir+listMain.getListUrl());
+        File file = new File(Keys.uploadDir.getLocation()+listMain.getListUrl());
         if(file.exists()) {
             file.delete();
             listMain.setListUrl(null);
@@ -74,7 +75,7 @@ public class ListService {
 
 
     public void delete(ListMain listMain) {
-        File file = new File(uploadDir+listMain.getListUrl());
+        File file = new File(Keys.uploadDir.getLocation()+listMain.getListUrl());
         if(file.exists()) {
             file.delete();
             listMain.setListUrl(null);

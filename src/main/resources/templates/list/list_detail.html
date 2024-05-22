@@ -26,7 +26,7 @@
         <div class="flex flex-row h-[50px] w-full bg-purple-100">
             <div class="flex w-[100px] h-[50px]">
                 <a th:href="@{|/user/profile/${listMain.author.id}|}" class="flex w-[50px] h-full">
-                    <img src="/logo/user.jpg" style="border-radius: 50%;" class="flex w-full h-full">
+                    <img th:src="${listMain.author.profileUrl != null ? listMain.author.profileUrl : '/Default/User.jpg'}" style="border-radius: 50%;" class="flex w-full h-full">
                 </a>
                 <div class="content-end" th:if="${listMain.author != null}"
                      th:text="${listMain.author.nickName}"></div>
@@ -48,7 +48,7 @@
             <div class="flex flex-col ml-[20px] mt-[10px]">
                 <div class="flex flex-row">
                     <a th:href="@{|/user/profile/${listMain.author.id}|}">
-                        <img class=" w-[30px] h-[30px]" src="/logo/user.jpg" alt="" style="border-radius: 50%;">
+                        <img class=" w-[30px] h-[30px]" th:src="${listMain.author.profileUrl}" alt="" style="border-radius: 50%;">
                     </a>
                     <span class="overflow-auto break-words h-[150px] text-lg text-bleak font-bold w-full"
                           th:text="${listMain.author.nickName} + ' : ' + ${listMain.content}"></span>
@@ -63,7 +63,7 @@
             <div class="flex flex-col break-words" th:each="answer : ${listMain.answerList}">
                 <div class="flex flex-row">
                     <a th:href="@{|/user/profile/${answer.author.id}|}">
-                        <img class="w-[30px] h-[30px]" src="/logo/user.jpg" alt="" style="border-radius: 50%;">
+                        <img class="w-[30px] h-[30px]" th:src="${answer.author.profileUrl != null ? answer.author.profileUrl : '/Default/User.jpg'}" alt="" style="border-radius: 50%;">
                     </a>
                     <span class="text-lg text-gray-800 font-bold"
                           th:text="${answer.author.nickName + ' : ' + answer.content}"></span>

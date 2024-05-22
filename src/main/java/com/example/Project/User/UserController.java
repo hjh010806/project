@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -69,23 +70,29 @@ public class UserController {
     public String profile(Model model, @AuthenticationPrincipal PrincipalDetail principalDetail) {
         // userDetails 객체를 통해 현재 사용자 정보에 접근 가능
         if (principalDetail != null) {
-            SiteUser siteUser = principalDetail.getUser();
+            SiteUser siteUser = userService.getUser(principalDetail.getUsername());
+
             if (siteUser != null) {
                 model.addAttribute("siteUser", siteUser);
                 model.addAttribute("listMain", listService.getAuthorList(siteUser.getId()));
+                model.addAttribute("temp_profile", siteUser.getProfileUrl());
             }
         }
         return "profile/profile_form";
     }
 
     @GetMapping("/profile/{id}")
-    public String userProfile(Model model,@PathVariable("id") Long id) {
+    public String userProfile(Model model, @PathVariable("id") Long id, Principal principal) {
         // userDetails 객체를 통해 현재 사용자 정보에 접근 가능
         SiteUser profileUser = this.userService.getUserId(id);
-            if (profileUser != null) {
-                model.addAttribute("profileUser", profileUser);
-                model.addAttribute("listMain", listService.getAuthorList(id));
-            }
+        if(principal != null) {
+            SiteUser user = userService.getUser(principal.getName());
+            model.addAttribute("siteUser", user);
+        }
+        if (profileUser != null) {
+            model.addAttribute("profileUser", profileUser);
+            model.addAttribute("listMain", listService.getAuthorList(id));
+        }
         return "profile/profile_user_form";
     }
 
@@ -96,12 +103,10 @@ public class UserController {
                                     @RequestParam("email") String email,
                                     @RequestParam("nickName") String nickName,
                                     @RequestParam("number") String number,
-//                                    @RequestParam("password") String password,
                                     RedirectAttributes redirectAttributes) {
         if (userService.hasUser(number, nickName, email))
             redirectAttributes.addFlashAttribute("error", "중복된 값입니다.");
         else {
-//            SiteUser user = userService.updateUserProfile(name, email, nickName, number, password);
             SiteUser user = userService.updateUserProfile(name, email, nickName, number);
             if (user != null)
                 principalDetail.setSiteUser(user);
@@ -109,7 +114,6 @@ public class UserController {
         // 프로필 페이지로 리다이렉트
         return "redirect:/user/profile";
     }
-
 
 
     @RequestMapping("/findPw")
@@ -132,7 +136,7 @@ public class UserController {
             return "profile/profile_form";
         }
         // 사용자의 아이디를 가져옵니다.
-        Long userId = principalDetail.getUser().getId();
+        Long userId = principalDetail.getId();
 
         // 비밀번호 변경을 userService에 위임합니다.
         userService.updateUserPassword(userId, userPasswordForm.getPassword(), userPasswordForm.getNewPassword1());
@@ -141,12 +145,15 @@ public class UserController {
 
 
     @GetMapping("/search")
-    public String search(Model model, @RequestParam("kw") String kw) {
+    public String search(Model model, @RequestParam("kw") String kw, Principal principal) {
         List<SiteUser> searchResults = userService.searchByKeyword(kw);
         model.addAttribute("userProfile", searchResults);
+        if(principal != null) {
+            SiteUser user = userService.getUser(principal.getName());
+            model.addAttribute("siteUser", user);
+        }
         return "list/search_list";
     }
-
 
 
 }

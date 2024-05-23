@@ -2,13 +2,13 @@ package com.example.Project.User;
 
 import com.example.Project.Likes.Likes;
 import com.example.Project.List.Image.Image;
+import com.example.Project.WebSocket.Chat.ChatRoom;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -50,8 +50,12 @@ public class SiteUser {
     private String imageUrl;
 
     private String profileUrl;
+
+    @ManyToMany
+    private List<ChatRoom> chatRoomList = new ArrayList<>();
+
     @Builder
-    public SiteUser(String name, String password,String nickName ,String email, String role, String provider, String providerId, String number) {
+    public SiteUser(String name, String password, String nickName, String email, String role, String provider, String providerId, String number) {
         this.name = name;
         this.password = password;
         this.nickName = nickName;
@@ -59,7 +63,7 @@ public class SiteUser {
         this.role = role;
         this.provider = provider;
         this.providerId = providerId;
-        this.number=number;
+        this.number = number;
     }
 
 }

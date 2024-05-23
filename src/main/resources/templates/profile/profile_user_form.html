@@ -39,6 +39,9 @@
                 <span class="font-semibold">닉네임 :</span>
                 <span th:text="${profileUser.nickName}"></span>
             </label>
+            <a th:href="@{|/user/talk/${id}|}" class="flex w-[230px] justify-end mt-[10px]">
+                <button class="btn btn-outline btn-primary w-[110px] h-[20px]" type="submit" sec:authorize="isAuthenticated()" th:if="${siteUser.nickName != profileUser.nickName}">메세지</button>
+            </a>
         </div>
     </div>
 </header>

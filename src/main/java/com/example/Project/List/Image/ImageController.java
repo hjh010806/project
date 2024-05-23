@@ -29,13 +29,6 @@ import java.nio.file.Paths;
 public class ImageController {
     private final ImageService imageService;
     private final UserService userService;
-//    @PostMapping("/image/load")
-//    public String imageUpload(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-//        String username = userDetails.getUsername();
-//        String imageUrl = userService.getUserByEmailUrl(username);
-//        model.addAttribute("imageUrl", imageUrl);
-//        return "redirect:/home/createList";
-//    }
 
     @PostMapping("/image/temp")
     public String tempUpload(ImageDto imageDto, @AuthenticationPrincipal UserDetails userDetails, RedirectAttributes redirectAttributes, @RequestParam(value = "temp_text") String text, @RequestParam(value = "destination") String destination) {
@@ -75,18 +68,6 @@ public class ImageController {
         }
     }
 
-//    @GetMapping("/{profileFilename}")
-//    public ResponseEntity<byte[]> getProfileImage(@PathVariable String profileFilename) {
-//        try {
-//            Path imagePath = Paths.get(profileUploadDir, profileFilename);
-//            File file = imagePath.toFile();
-//            byte[] data = Files.readAllBytes(file.toPath());
-//            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(data);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
 
     @GetMapping("/image/delete")
     public String imageDelete(@AuthenticationPrincipal UserDetails userDetails) {

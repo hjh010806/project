@@ -17,7 +17,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 
-import static com.example.Project.List.QListMain.listMain;
 
 @Controller
 @RequiredArgsConstructor

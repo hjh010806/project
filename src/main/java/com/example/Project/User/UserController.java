@@ -4,11 +4,14 @@ import com.example.Project.List.ListMain;
 import com.example.Project.List.ListService;
 import com.example.Project.SocialLogin.PrincipalDetail;
 import com.example.Project.SocialLogin.PrincipalDetailsService;
+import com.example.Project.WebSocket.Chat.ChatRoom;
+import com.example.Project.WebSocket.Chat.ChatRoomService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,14 +21,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
-    private final PrincipalDetailsService principalDetailsService;
     private final ListService listService;
+    private final ChatRoomService chatRoomService;
 
     @GetMapping("/signup")
     public String signup(UserCreateForm userCreateForm) {
@@ -155,5 +159,23 @@ public class UserController {
         return "list/search_list";
     }
 
+
+    @GetMapping("/talk/{id}")
+    public String talk(Model model, @PathVariable("id") Long friendId, @AuthenticationPrincipal UserDetails userDetails) {
+        SiteUser ownerUser = userService.getUser(userDetails.getUsername());
+        SiteUser friendUser = userService.getUserId(friendId);
+        Optional<ChatRoom> chatRoom = chatRoomService.getChatRoom(ownerUser, friendUser);
+        if (chatRoom.isPresent()) {
+            model.addAttribute("chatRoom", chatRoom.get());
+        } else {
+            ChatRoom chatRoom1 = ChatRoom.builder().user1(ownerUser).user2(friendUser).build();
+            chatRoom1 = chatRoomService.save(chatRoom1);
+            model.addAttribute("chatRoom", chatRoom1);
+        }
+        model.addAttribute("ownerUser", ownerUser);
+        model.addAttribute("friendUser", friendUser);
+
+        return "chat/chatRoom";
+    }
 
 }

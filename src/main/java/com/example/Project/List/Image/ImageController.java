@@ -75,18 +75,6 @@ public class ImageController {
         }
     }
 
-//    @GetMapping("/{profileFilename}")
-//    public ResponseEntity<byte[]> getProfileImage(@PathVariable String profileFilename) {
-//        try {
-//            Path imagePath = Paths.get(profileUploadDir, profileFilename);
-//            File file = imagePath.toFile();
-//            byte[] data = Files.readAllBytes(file.toPath());
-//            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(data);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
 
     @GetMapping("/image/delete")
     public String imageDelete(@AuthenticationPrincipal UserDetails userDetails) {

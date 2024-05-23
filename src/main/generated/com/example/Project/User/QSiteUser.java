@@ -20,6 +20,8 @@ public class QSiteUser extends EntityPathBase<SiteUser> {
 
     public static final QSiteUser siteUser = new QSiteUser("siteUser");
 
+    public final ListPath<com.example.Project.WebSocket.Chat.ChatRoom, com.example.Project.WebSocket.Chat.QChatRoom> chatRoomList = this.<com.example.Project.WebSocket.Chat.ChatRoom, com.example.Project.WebSocket.Chat.QChatRoom>createList("chatRoomList", com.example.Project.WebSocket.Chat.ChatRoom.class, com.example.Project.WebSocket.Chat.QChatRoom.class, PathInits.DIRECT2);
+
     public final StringPath email = createString("email");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);

@@ -3,7 +3,6 @@ package com.example.Project.WebSocket.Chat;
 import com.example.Project.User.SiteUser;
 import com.example.Project.User.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

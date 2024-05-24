@@ -30,7 +30,7 @@
                  th:with="listMain=${listDTO.listMain}, heart=${listDTO.heart}">
                 <div class="sl__item__header bg-purple-100">
                     <div>
-                        <a th:href="@{|/user/profile/${listMain.author.id}|}">
+                        <a th:href="@{|/user/${listMain.author.id}/profile|}">
                             <img th:src="${listMain.author.profileUrl != null ? listMain.author.profileUrl : '/Default/User.jpg'}" style="border-radius: 50%;" class="flex w-full h-full">
                         </a>
                     </div>

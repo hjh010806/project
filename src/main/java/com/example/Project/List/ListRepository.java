@@ -1,5 +1,6 @@
 package com.example.Project.List;
 
+import com.example.Project.User.SiteUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,5 +13,6 @@ public interface ListRepository extends JpaRepository<ListMain, Integer> {
 
     List<ListMain> findByAuthorId(Long authorId);
 
-
+    @Query("SELECT lm FROM ListMain lm JOIN likes l WHERE l.siteUser.id = :id")
+    List<ListMain> findLikesByUserId(@Param("id") Long id);
 }

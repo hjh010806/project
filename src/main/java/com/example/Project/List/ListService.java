@@ -87,4 +87,7 @@ public class ListService {
         return listRepository.findByAuthorId(id);
     }
 
+    public Object getLikesList(Long id) {
+        return listRepository.findLikesByUserId(id);
+    }
 }

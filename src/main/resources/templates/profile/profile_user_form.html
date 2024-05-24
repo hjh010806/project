@@ -51,12 +51,12 @@
     <div class="flex justify-between w-2/6 items-center h-[100px]">
         <div role="button">
             <i class="fa-regular fa-images">
-                <a>게시물</a>
+                <a th:href="@{|/user/${profileUser.id}/profile?action=myList|}">게시물</a>
             </i>
         </div>
         <div role="button">
             <i class="fa-regular fa-heart">
-                <a>좋아요</a>
+                <a th:href="@{|/user/${profileUser.id}/profile?action=likes|}">좋아요</a>
             </i>
         </div>
         <div role="button">

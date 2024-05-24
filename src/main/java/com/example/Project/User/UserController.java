@@ -1,5 +1,6 @@
 package com.example.Project.User;
 
+import com.example.Project.Likes.LikesService;
 import com.example.Project.List.ListMain;
 import com.example.Project.List.ListService;
 import com.example.Project.SocialLogin.PrincipalDetail;
@@ -30,6 +31,7 @@ public class UserController {
     private final UserService userService;
     private final ListService listService;
     private final ChatRoomService chatRoomService;
+    private final LikesService likesService;
 
     @GetMapping("/signup")
     public String signup(UserCreateForm userCreateForm) {
@@ -71,31 +73,42 @@ public class UserController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/profile")
-    public String profile(Model model, @AuthenticationPrincipal PrincipalDetail principalDetail) {
+    public String profile(Model model, @AuthenticationPrincipal PrincipalDetail principalDetail, @RequestParam(name = "action", required = false) String action) {
         // userDetails 객체를 통해 현재 사용자 정보에 접근 가능
         if (principalDetail != null) {
             SiteUser siteUser = userService.getUser(principalDetail.getUsername());
 
             if (siteUser != null) {
                 model.addAttribute("siteUser", siteUser);
-                model.addAttribute("listMain", listService.getAuthorList(siteUser.getId()));
                 model.addAttribute("temp_profile", siteUser.getProfileUrl());
+                if ("myList".equals(action))
+                    model.addAttribute("listMain", listService.getAuthorList(siteUser.getId()));
+                else if ("likes".equals(action))
+                    model.addAttribute("listMain", listService.getLikesList(siteUser.getId()));
+                else
+                    model.addAttribute("listMain", listService.getAuthorList(siteUser.getId()));
             }
         }
         return "profile/profile_form";
     }
 
-    @GetMapping("/profile/{id}")
-    public String userProfile(Model model, @PathVariable("id") Long id, Principal principal) {
+
+    @GetMapping("/{id}/profile")
+    public String userProfile(Model model, @PathVariable("id") Long id, Principal principal, @RequestParam(name = "action", required = false) String action) {
         // userDetails 객체를 통해 현재 사용자 정보에 접근 가능
         SiteUser profileUser = this.userService.getUserId(id);
-        if(principal != null) {
+        if (principal != null) {
             SiteUser user = userService.getUser(principal.getName());
             model.addAttribute("siteUser", user);
         }
         if (profileUser != null) {
             model.addAttribute("profileUser", profileUser);
-            model.addAttribute("listMain", listService.getAuthorList(id));
+            if ("myList".equals(action))
+                model.addAttribute("listMain", listService.getAuthorList(id));
+            else if ("likes".equals(action))
+                model.addAttribute("listMain", listService.getLikesList(id));
+            else
+                model.addAttribute("listMain", listService.getAuthorList(id));
         }
         return "profile/profile_user_form";
     }
@@ -152,7 +165,7 @@ public class UserController {
     public String search(Model model, @RequestParam("kw") String kw, Principal principal) {
         List<SiteUser> searchResults = userService.searchByKeyword(kw);
         model.addAttribute("userProfile", searchResults);
-        if(principal != null) {
+        if (principal != null) {
             SiteUser user = userService.getUser(principal.getName());
             model.addAttribute("siteUser", user);
         }
@@ -160,7 +173,8 @@ public class UserController {
     }
 
     @GetMapping("/talk/{id}")
-    public String talk(Model model, @PathVariable("id") Long friendId, @AuthenticationPrincipal UserDetails userDetails) {
+    public String talk(Model model, @PathVariable("id") Long friendId, @AuthenticationPrincipal UserDetails
+            userDetails) {
         SiteUser ownerUser = userService.getUser(userDetails.getUsername());
         SiteUser friendUser = userService.getUserId(friendId);
         Optional<ChatRoom> chatRoom = chatRoomService.getChatRoom(ownerUser, friendUser);

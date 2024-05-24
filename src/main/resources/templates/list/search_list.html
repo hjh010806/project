@@ -33,7 +33,7 @@
         </div>
         <div class="flex justify-start items-center w-full border-b border-gray-300"
              th:each="siteUser : ${userProfile}">
-            <a th:href="@{|/user/profile/${siteUser.id}|}" class="block w-full">
+            <a th:href="@{|/user/${siteUser.id}/profile|}" class="block w-full">
                 <div class="flex flex-row h-[50px]">
                     <div class="flex w-[100px] justify-center items-center">
                         <img class="w-[50px] h-[50px]" th:src="${siteUser.profileUrl != null ? siteUser.profileUrl : '/Default/User.jpg'}" alt="" style="border-radius: 50%;">

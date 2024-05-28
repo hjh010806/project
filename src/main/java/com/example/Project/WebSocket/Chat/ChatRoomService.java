@@ -38,4 +38,8 @@ public class ChatRoomService {
     public ChatRoom findById(Long id) {
         return chatRoomRepository.findById(id);
     }
+
+    public ChatRoom getChatRoomId(Long chatRoomId) {
+        return chatRoomRepository.findById(chatRoomId);
+    }
 }

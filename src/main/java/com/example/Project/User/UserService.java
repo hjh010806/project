@@ -156,6 +156,10 @@ public class UserService {
         userRepository.save(siteUser);
     }
 
+    public List<SiteUser> getUserAll() {
+        return userRepository.findAll();
+    }
+
 //    public String getProfileUrl(SiteUser siteUser) {
 //        return profileUploadDir + siteUser.getProfileUrl();
 //    }

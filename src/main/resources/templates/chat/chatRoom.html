@@ -28,97 +28,115 @@
                     <div id="messages" class="w-full">
                         <div th:each="list : ${chatRoom.chatMessagesList}">
                             <div th:if="${list.sender == ownerUser.nickName}">
-                                <div class="chat chat-end gap-5">
-                                    <span class="chat-header" th:text="${list.sender}"></span>
-                                    <time class="text-xs opacity-50" th:text="${list.createDate}"></time>
-                                    <div class="chat-bubble mb-3" th:text="${list.message}"></div>
+                                <div class="chat chat-end flex flex-col items-end">
+                                    <div class="flex items-center">
+                                        <div class="chat-header" >
+                                            [[${list.sender}]]
+                                            <time class="text-xs opacity-50" th:text="${list.createDate}"></time>
+                                        </div>
+                                    </div>
+                                    <div class="chat-bubble mr-2" th:text="${list.message}"></div>
                                 </div>
                             </div>
                             <div th:if="${list.sender != ownerUser.nickName}">
-                                <div class="chat chat-start gap-5">
-                                    <span class="chat-header" th:text="${list.sender}"></span>
-                                    <time class="text-xs opacity-50" th:text="${list.createDate}"></time>
-                                    <div class="chat-bubble mb-3" th:text="${list.message}"></div>
+                                <div class="chat chat-start flex flex-col items-start">
+                                    <div class="flex">
+                                        <div class="chat-header">
+                                            [[${list.sender}]]
+                                            <time class="text-xs opacity-50" th:text="${list.createDate}"></time>
+                                        </div>
+                                    </div>
+                                    <div class="chat-bubble ml-2" th:text="${list.message}"></div>
                                 </div>
                             </div>
                         </div>
-                        <div id="greetings">
-
-                        </div>
+                        <div id="greetings"></div>
                     </div>
                 </div>
                 <input id="message" type="text" class="border border-gray-200 rounded-lg p-2 w-full mb-4 h-[50px]"
-                       placeholder="Type your message...">
+                       placeholder="Type your message..."/>
             </div>
         </div>
-    </div>
-    <script th:inline="javascript">
-        function connect() {
-            var socket = new SockJS("http://localhost:8118/ws-stomp");
-            stompClient = Stomp.over(socket);
-            stompClient.connect({}, function (frame) {
-                console.log('웹소켓 연결 성공:', frame);
+        <script th:inline="javascript">
+            function connect() {
+                var socket = new SockJS("http://localhost:8118/ws-stomp");
+                stompClient = Stomp.over(socket);
+                stompClient.connect({}, function (frame) {
+                    console.log('웹소켓 연결 성공:', frame);
+                    const aa = /*[[${chatRoom.id}]]*/;
+                    const friendUser = [[${friendUser.email}]];
+                    //구독
+                    stompClient.subscribe('/sub/talk/' + aa, function (chatMessageDto) {
+                        showChat(JSON.parse(chatMessageDto.body));
+                    });
+                    stompClient.subscribe('/sub/alarm/' + friendUser, function (alarmDto) {
+                    });
+                });
+            }
+            function sendChat() {
                 const aa = /*[[${chatRoom.id}]]*/;
-                const friendUser = [[${friendUser.nickName}]];
-                //구독
-                stompClient.subscribe('/sub/talk/' + aa, function (chatMessageDto) {
-                    showChat(JSON.parse(chatMessageDto.body));
+                const sender = /*[[${ownerUser.nickName}]]*/;
+                const friendUser = [[${friendUser.email}]];
+                const acceptUser = [[${friendUser.nickName}]];
+
+
+                var currentDate = new Date();
+                currentDate.setTime(currentDate.getTime() + (9 * 60 * 60 * 1000));
+               var formattedDate = new Date(currentDate).toISOString(); // ISO 형식으로 변환
+
+                if ($("#message").val() != "") {
+                    stompClient.send("/pub/talk/" + aa, {},
+                        JSON.stringify({
+                            'sender': sender,
+                            'message': $("#message").val(),
+                            'createDate': formattedDate
+                        }));
+               }
+               stompClient.send("/pub/alarm/" +friendUser, {},
+                JSON.stringify({
+                    'message' : $("#message").val(),
+                    'accept' : 'false',
+                    'sendUserNickname' : sender,
+                    'acceptUserNickname' : acceptUser,
+                    'chatRoomId' : aa
+                }));
+                $("#message").val('');
+            }
+            function showChat(chatMessageDto) {
+                const sender = /*[[${ownerUser.nickName}]]*/;
+                if (chatMessageDto.sender == sender) {
+                     $("#greetings").append(
+                        "<div class = 'chat chat-end  flex flex-col items-end'><div class = 'chat-header'>" + chatMessageDto.sender + " <time class='text-xs opacity-50'>" + chatMessageDto.createDate + "</time></div><div class = 'chat-bubble mr-2'>" + chatMessageDto.message + "</div></div>"
+                    );
+                } else {
+                    $("#greetings").append(
+                        "<div class = 'chat chat-start flex flex-col items-start'><div class = 'chat-header'>" + chatMessageDto.sender + " <time class='text-xs opacity-50'>" + chatMessageDto.createDate + "</time></div><div class = 'chat-bubble ml-2'>" + chatMessageDto.message + "</div></div>"
+                    );
+                }
+                  var messageContainer = document.getElementById("messages");
+                  messageContainer.scrollTop = messageContainer.scrollHeight;
+            }
+            $(function () {
+
+                $("#message").keyup(function (event) {
+                    if (event.keyCode === 13) {
+                        sendChat();
+                    }
                 });
             });
-        }
-        function sendChat() {
-            const aa = /*[[${chatRoom.id}]]*/;
-            const sender = /*[[${ownerUser.nickName}]]*/;
-            const acceptUser = [[${friendUser.nickName}]];
+            document.addEventListener('DOMContentLoaded', function () {
+                connect();
 
-            var currentDate = new Date();
-            currentDate.setTime(currentDate.getTime() + (9 * 60 * 60 * 1000));
-           var formattedDate = new Date(currentDate).toISOString(); // ISO 형식으로 변환
+                 // 채팅창의 div 요소를 가져옵니다.
+             var messageContainer = document.getElementById("messages");
 
-            if ($("#message").val() != "") {
-                stompClient.send("/pub/talk/" + aa, {},
-                    JSON.stringify({
-                        'sender': sender,
-                        'message': $("#message").val(),
-                        'createDate': formattedDate
-                    }));
-           }
-            $("#message").val('');
-        }
-        function showChat(chatMessageDto) {
-            const sender = /*[[${ownerUser.nickName}]]*/;
-            if (chatMessageDto.sender == sender) {
-                $("#greetings").append(
-                    "<div class = 'chat chat-end'><div class = 'chat-header'>" + chatMessageDto.sender + " <time class='text-xs opacity-50'>" + chatMessageDto.createDate + "</time></div><div class = 'chat-bubble'>" + chatMessageDto.message + "</div></div>"
-                );
-            } else {
-                $("#greetings").append(
-                    "<div class = 'chat chat-start'><div class = 'chat-header'>" + chatMessageDto.sender + " <time class='text-xs opacity-50'>" + chatMessageDto.createDate + "</time></div><div class = 'chat-bubble'>" + chatMessageDto.message + "</div></div>"
-                );
-            }
-              var messageContainer = document.getElementById("messages");
-              messageContainer.scrollTop = messageContainer.scrollHeight;
-        }
-        $(function () {
-
-            $("#message").keyup(function (event) {
-                if (event.keyCode === 13) {
-                    sendChat();
-                }
+                // 스크롤을 아래로 이동시킵니다.
+             messageContainer.scrollTop = messageContainer.scrollHeight;
             });
-        });
-        document.addEventListener('DOMContentLoaded', function () {
-            connect();
-
-             // 채팅창의 div 요소를 가져옵니다.
-         var messageContainer = document.getElementById("messages");
-
-            // 스크롤을 아래로 이동시킵니다.
-         messageContainer.scrollTop = messageContainer.scrollHeight;
-        });
 
 
-    </script>
+        </script>
+    </div>
 </div>
 </body>
 </html>

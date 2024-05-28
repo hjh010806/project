@@ -6,6 +6,8 @@ import com.example.Project.Likes.LikesService;
 import com.example.Project.SocialLogin.PrincipalDetail;
 import com.example.Project.User.SiteUser;
 import com.example.Project.User.UserService;
+import com.example.Project.WebSocket.Alarm.Alarm;
+import com.example.Project.WebSocket.Alarm.AlarmService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.*;
@@ -31,19 +34,21 @@ public class ListController {
     private final ListService listService;
     private final UserService userService;
     private final LikesService likesService;
+    private final AlarmService alarmService;
 
     @GetMapping("/list")
     public String list(Model model, @AuthenticationPrincipal PrincipalDetail principalDetail) {
         List<ListMain> mainList = this.listService.getList();
         SiteUser user = principalDetail != null ? userService.getUser(principalDetail.getUsername()) : null;
-        if (principalDetail != null) {
-            SiteUser siteUser = userService.getUser(principalDetail.getEmail());
-            model.addAttribute("siteUser", siteUser);
-        }
+        model.addAttribute("siteUser", user);
+
         List<ListDTO> listDTOS = new ArrayList<>();
         for (ListMain listMain : mainList)
             listDTOS.add(ListDTO.builder().listMain(listMain).heart(user != null ? likesService.isLikes(listMain.getId(), user.getId()) : false).listUrl(listMain.getListUrl()).build());
         model.addAttribute("listDTOS", listDTOS);
+
+        List<Alarm> alarmList = user != null ? alarmService.findByAcceptUser(user) : Collections.emptyList();
+        model.addAttribute("alarmList", alarmList);
         return "main_form";
     }
 
@@ -74,12 +79,12 @@ public class ListController {
     public String listCreate(Model model, ListForm listForm, @AuthenticationPrincipal UserDetails userDetails) {
         model.addAttribute("destination", "createList");
         // 기능을 구현하다 수정진행중 데이터유지가 필요없을거같아 지웠지만 혹시몰라 주석처리함.
-//        SiteUser user = userService.getUser(userDetails.getUsername());
-//        String temp = user.getImageUrl();
-//        model.addAttribute("temp", temp);
+        SiteUser user = userService.getUser(userDetails.getUsername());
         if (model.containsAttribute("text"))
             listForm.setContent((String) model.getAttribute("text"));
-        model.addAttribute("siteUser", userService.getUser(userDetails.getUsername()));
+        model.addAttribute("siteUser", user);
+        List<Alarm> alarmList = user != null ? alarmService.findByAcceptUser(user) : Collections.emptyList();
+        model.addAttribute("alarmList", alarmList);
         return "list/list_form";
     }
 
@@ -98,9 +103,11 @@ public class ListController {
     public String detail(Model model, @PathVariable("id") Integer id, PrincipalDetail principalDetail, Principal principal, AnswerForm answerForm) {
         ListMain listMain = this.listService.getListMain(id);
         model.addAttribute("listMain", listMain);
-        if(principal != null) {
+        if (principal != null) {
             SiteUser user = userService.getUser(principal.getName());
             model.addAttribute("siteUser", user);
+            List<Alarm> alarmList = user != null ? alarmService.findByAcceptUser(user) : Collections.emptyList();
+            model.addAttribute("alarmList", alarmList);
         }
 
         return "list/list_detail";
@@ -118,6 +125,8 @@ public class ListController {
         // 리스트
         SiteUser user = userService.getUser(listMain.getAuthor().getEmail());
         model.addAttribute("siteUser", user);
+        List<Alarm> alarmList = user != null ? alarmService.findByAcceptUser(user) : Collections.emptyList();
+        model.addAttribute("alarmList", alarmList);
 
         if (user.getImageUrl() != null) {
             String temp = user.getImageUrl();

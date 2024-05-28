@@ -1,6 +1,7 @@
 package com.example.Project.WebSocket.Chat;
 
 import com.example.Project.User.SiteUser;
+import com.example.Project.WebSocket.Alarm.Alarm;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -28,6 +29,10 @@ public class ChatRoom {
 
     @ManyToOne
     private SiteUser user2;
+
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.REMOVE)
+    @JsonManagedReference
+    List<Alarm> alarmList = new ArrayList<>();
 
     @Builder
     private ChatRoom(SiteUser user1, SiteUser user2) {

@@ -3,11 +3,9 @@ package com.example.Project.User;
 import com.example.Project.Likes.Likes;
 import com.example.Project.List.Image.Image;
 import com.example.Project.WebSocket.Chat.ChatRoom;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +15,7 @@ import java.util.Set;
 @Setter
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 public class SiteUser {
     // 회원 id
     @Id
@@ -42,9 +41,11 @@ public class SiteUser {
     private String providerId;
 
     @OneToMany(mappedBy = "siteUser", cascade = CascadeType.ALL)
+    @JsonBackReference
     private Set<Likes> likes;
 
     @OneToMany(mappedBy = "siteUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     private List<Image> images = new ArrayList<>();
 
     private String imageUrl;
@@ -52,6 +53,7 @@ public class SiteUser {
     private String profileUrl;
 
     @ManyToMany
+    @JsonBackReference
     private List<ChatRoom> chatRoomList = new ArrayList<>();
 
     @Builder

@@ -5,9 +5,13 @@ import com.example.Project.List.ListMain;
 import com.example.Project.List.ListService;
 import com.example.Project.SocialLogin.PrincipalDetail;
 import com.example.Project.SocialLogin.PrincipalDetailsService;
+import com.example.Project.WebSocket.Alarm.Alarm;
+import com.example.Project.WebSocket.Alarm.AlarmDto;
+import com.example.Project.WebSocket.Alarm.AlarmService;
 import com.example.Project.WebSocket.Chat.ChatRoom;
 import com.example.Project.WebSocket.Chat.ChatRoomService;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +36,7 @@ public class UserController {
     private final UserService userService;
     private final ListService listService;
     private final ChatRoomService chatRoomService;
-    private final LikesService likesService;
+    private final AlarmService alarmService;
 
     @GetMapping("/signup")
     public String signup(UserCreateForm userCreateForm) {
@@ -77,17 +82,16 @@ public class UserController {
         // userDetails 객체를 통해 현재 사용자 정보에 접근 가능
         if (principalDetail != null) {
             SiteUser siteUser = userService.getUser(principalDetail.getUsername());
-
-            if (siteUser != null) {
-                model.addAttribute("siteUser", siteUser);
-                model.addAttribute("temp_profile", siteUser.getProfileUrl());
-                if ("myList".equals(action))
-                    model.addAttribute("listMain", listService.getAuthorList(siteUser.getId()));
-                else if ("likes".equals(action))
-                    model.addAttribute("listMain", listService.getLikesList(siteUser.getId()));
-                else
-                    model.addAttribute("listMain", listService.getAuthorList(siteUser.getId()));
-            }
+            List<Alarm> alarmList = siteUser != null ? alarmService.findByAcceptUser(siteUser) : Collections.emptyList();
+            model.addAttribute("alarmList", alarmList);
+            model.addAttribute("siteUser", siteUser);
+            model.addAttribute("temp_profile", siteUser.getProfileUrl());
+            if ("myList".equals(action))
+                model.addAttribute("listMain", listService.getAuthorList(siteUser.getId()));
+            else if ("likes".equals(action))
+                model.addAttribute("listMain", listService.getLikesList(siteUser.getId()));
+            else
+                model.addAttribute("listMain", listService.getAuthorList(siteUser.getId()));
         }
         return "profile/profile_form";
     }
@@ -100,6 +104,8 @@ public class UserController {
         if (principal != null) {
             SiteUser user = userService.getUser(principal.getName());
             model.addAttribute("siteUser", user);
+            List<Alarm> alarmList = user != null ? alarmService.findByAcceptUser(user) : Collections.emptyList();
+            model.addAttribute("alarmList", alarmList);
         }
         if (profileUser != null) {
             model.addAttribute("profileUser", profileUser);
@@ -187,8 +193,32 @@ public class UserController {
         }
         model.addAttribute("ownerUser", ownerUser);
         model.addAttribute("friendUser", friendUser);
-
         return "chat/chatRoom";
+    }
+
+    @GetMapping("/alarmCheck/{chatRoomId}")
+    public String alarmCheck(@PathVariable("chatRoomId") Long chatRoomId, @AuthenticationPrincipal UserDetails userDetails) {
+        SiteUser siteUser = userService.getUser(userDetails.getUsername());
+        ChatRoom chatRoom = chatRoomService.findById(chatRoomId);
+        List<Alarm> alarmList = alarmService.findByChatRoomId(chatRoomId);
+        for (Alarm alarm : alarmList) {
+            if (alarm.getAcceptUser() == siteUser) {
+                alarmService.delete(alarm);
+            }
+        }
+        if (siteUser != chatRoom.getUser1())
+            return "redirect:/user/talk/%d".formatted(chatRoom.getUser1().getId());
+        else
+            return "redirect:/user/talk/%d".formatted(chatRoom.getUser2().getId());
+    }
+
+    @GetMapping("/notifications")
+    public List<Alarm> getNotifications(@AuthenticationPrincipal PrincipalDetail principalDetail) {
+        if (principalDetail != null) {
+            SiteUser user = userService.getUser(principalDetail.getUsername());
+            return alarmService.findByAcceptUser(user);
+        }
+        return Collections.emptyList();
     }
 
 }

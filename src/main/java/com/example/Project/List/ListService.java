@@ -1,20 +1,11 @@
 package com.example.Project.List;
 
-import com.example.Project.Keys;
-import com.example.Project.List.Image.ImageDto;
 import com.example.Project.List.Image.ImageService;
 import com.example.Project.Main.DataNotFoundException;
+import com.example.Project.ProjectApplication;
 import com.example.Project.User.SiteUser;
-import com.example.Project.User.UserRepository;
 import com.example.Project.User.UserService;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.boot.model.source.spi.PluralAttributeIndexNature;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -66,7 +57,7 @@ public class ListService {
     }
 
     public void deleteListUrl(ListMain listMain) {
-        File file = new File(Keys.uploadDir.getLocation()+listMain.getListUrl());
+        File file = new File(ProjectApplication.getOsType().getLoc()+listMain.getListUrl());
         if(file.exists()) {
             file.delete();
             listMain.setListUrl(null);
@@ -75,7 +66,7 @@ public class ListService {
 
 
     public void delete(ListMain listMain) {
-        File file = new File(Keys.uploadDir.getLocation()+listMain.getListUrl());
+        File file = new File(ProjectApplication.getOsType().getLoc()+listMain.getListUrl());
         if(file.exists()) {
             file.delete();
             listMain.setListUrl(null);

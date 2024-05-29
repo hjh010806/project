@@ -1,17 +1,14 @@
 package com.example.Project.List.Image;
 
-import com.example.Project.Keys;
+import com.example.Project.ProjectApplication;
 import com.example.Project.User.SiteUser;
 import com.example.Project.User.UserService;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.boot.jaxb.mapping.JaxbCompositeUserTypeRegistration;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,7 +54,7 @@ public class ImageController {
     @GetMapping("/{filename}")
     public ResponseEntity<byte[]> getImage(@PathVariable String filename) {
         try {
-            Path imagePath = Paths.get(Keys.uploadDir.getLocation(),filename);
+            Path imagePath = Paths.get(ProjectApplication.getOsType().getLoc(),filename);
             File file = imagePath.toFile();
             byte[] data = Files.readAllBytes(file.toPath());
             return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(data);

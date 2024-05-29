@@ -8,6 +8,8 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
     @Autowired
@@ -37,13 +39,13 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         String email = oAuth2UserInfo.getEmail();
         String role = "USER";
 
-        SiteUser userEntity = userRepository.findByName(name);
-        if (userEntity == null) {
+        Optional<SiteUser> _userEntity = userRepository.findByEmail(email);
+        if (_userEntity.isEmpty()) {
             System.out.println(provider + "로그인이 최초입니다.");
             //강제 회원가입
             //회원 DB에 추가함
             //password 가 null 이기 때문에 일반적인 회원가입을 할 수가 없음
-            userEntity = SiteUser.builder()
+            SiteUser userEntity = SiteUser.builder()
                     .name(name)
                     .email(email)
                     .nickName(nickname)
@@ -55,6 +57,6 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         } else {
             System.out.println(provider + "로그인을 이미 한 적이 있습니다.");
         }
-        return new PrincipalDetail(userEntity,oAuth2User.getAttributes());
+        return new PrincipalDetail(_userEntity.get(),oAuth2User.getAttributes());
     }
 }

@@ -74,7 +74,7 @@
 
             // 웹소켓 연결
             function connectWebSocket(loggedInUser) {
-            var socket = new SockJS("http://localhost:8118/ws-stomp");
+            var socket = new SockJS("http://www.010806.kro.kr/ws-stomp");
             var stompClient = Stomp.over(socket);
                 stompClient.connect({}, function (frame) {
                     console.log('웹소켓 연결 성공:', frame);

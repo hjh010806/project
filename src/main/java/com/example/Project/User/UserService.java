@@ -1,11 +1,10 @@
 package com.example.Project.User;
 
-import com.example.Project.Keys;
 import com.example.Project.List.ListRepository;
 import com.example.Project.Main.DataNotFoundException;
+import com.example.Project.ProjectApplication;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -147,7 +146,7 @@ public class UserService {
     }
     public void deleteUrlFile (SiteUser siteUser) {
 
-        File file = new File(Keys.uploadDir.getLocation()+siteUser.getImageUrl());
+        File file = new File(ProjectApplication.getOsType().getLoc()+siteUser.getImageUrl());
 //        getImageUrl = "/list/..."
         if(file.exists()) {
             file.delete();

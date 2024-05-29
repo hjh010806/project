@@ -3,7 +3,6 @@ package com.example.Project.WebSocket.Alarm;
 import com.example.Project.User.SiteUser;
 import com.example.Project.WebSocket.Chat.ChatRoom;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

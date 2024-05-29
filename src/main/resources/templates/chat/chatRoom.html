@@ -59,7 +59,7 @@
         </div>
         <script th:inline="javascript">
             function connect() {
-                var socket = new SockJS("http://localhost:8118/ws-stomp");
+                var socket = new SockJS("http://www.010806.kro.kr/ws-stomp");
                 stompClient = Stomp.over(socket);
                 stompClient.connect({}, function (frame) {
                     console.log('웹소켓 연결 성공:', frame);

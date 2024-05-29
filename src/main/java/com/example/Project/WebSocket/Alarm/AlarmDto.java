@@ -1,6 +1,5 @@
 package com.example.Project.WebSocket.Alarm;
 
-import com.example.Project.User.SiteUser;
 import lombok.Getter;
 import lombok.Setter;
 

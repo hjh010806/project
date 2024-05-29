@@ -1,11 +1,10 @@
 package com.example.Project.List.Image;
 
-import com.example.Project.Keys;
+import com.example.Project.ProjectApplication;
 import com.example.Project.User.SiteUser;
 import com.example.Project.User.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -26,15 +25,18 @@ public class ImageService {
     public String tempUpload(ImageDto imageDto, String username) {
         try {
             SiteUser siteUser = userService.getUser(username);
-            File file = new File(Keys.uploadDir.getLocation() + siteUser.getImageUrl());
+            File file = new File(ProjectApplication.getOsType().getLoc() + siteUser.getImageUrl());
             if (file.exists())
                 file.delete();
 
             UUID uuid = UUID.randomUUID();
             String imageFileName = "/List/" + username + "_" + uuid + imageDto.getFile().getOriginalFilename();
 
-            Path imageFilePath = Paths.get(Keys.uploadDir.getLocation() + imageFileName);
+            Path imageFilePath = Paths.get(ProjectApplication.getOsType().getLoc() + imageFileName);
 
+            File loc = imageFilePath.toFile();
+            if(!loc.getParentFile().exists())
+                loc.mkdirs();
             // 파일을 저장합니다.
             Files.write(imageFilePath, imageDto.getFile().getBytes());
 
@@ -55,14 +57,18 @@ public class ImageService {
     public String profileUserUpload(ImageDto imageDto, String username) {
         try {
             SiteUser siteUser = userService.getUser(username);
-            File file = new File(Keys.uploadDir.getLocation() + siteUser.getProfileUrl());
-            if (file.exists())
-                file.delete();
+            File preFile = new File(ProjectApplication.getOsType().getLoc() + siteUser.getProfileUrl());
+            if (preFile.exists())
+                preFile.delete();
 
             UUID uuid = UUID.randomUUID();
             String profileImageFileName = "/User/" + username + "_Profile_" + uuid + imageDto.getFile().getOriginalFilename();
 
-            Path profileImageFilePath = Paths.get(Keys.uploadDir.getLocation() + profileImageFileName);
+            Path profileImageFilePath = Paths.get(ProjectApplication.getOsType().getLoc() + profileImageFileName);
+
+            File loc = profileImageFilePath.toFile();
+            if(!loc.getParentFile().exists())
+                loc.mkdirs();
 
             Files.write(profileImageFilePath, imageDto.getFile().getBytes());
 

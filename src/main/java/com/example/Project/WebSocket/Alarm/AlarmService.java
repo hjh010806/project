@@ -1,7 +1,6 @@
 package com.example.Project.WebSocket.Alarm;
 
 import com.example.Project.User.SiteUser;
-import com.example.Project.User.UserService;
 import com.example.Project.WebSocket.Chat.ChatMessageDto;
 import com.example.Project.WebSocket.Chat.ChatRoomService;
 import lombok.RequiredArgsConstructor;
